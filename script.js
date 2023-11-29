@@ -10,12 +10,13 @@ function capitalizeFirstLetter(string) {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const pokemonName = document.getElementById("newPokemonName").value.toLowerCase();
+  const pokemonName = document
+    .getElementById("newPokemonName")
+    .value.toLowerCase();
 
   fetch(`${POKEMON_URL}/${pokemonName}`)
     .then((response) => response.json())
     .then((newPokemon) => {
-      console.log(newPokemon)
       const div = document.createElement("div");
       const image = document.createElement("img");
       const name = document.createElement("h1");
@@ -27,7 +28,7 @@ form.addEventListener("submit", (event) => {
       div.appendChild(name);
       div.appendChild(image);
       root.appendChild(div);
-  });
+    });
 });
 
 function getGenerations() {
@@ -36,7 +37,10 @@ function getGenerations() {
     .then((response) => response.json())
     .then((gen_data) => {
       for (let i = 0; i < gen_data.count; ++i) {
-        generations.push(gen_data.results[i].name);
+        generations.push({
+          name: gen_data.results[i].name,
+          url: gen_data.results[i].url,
+        });
       }
     });
   return generations;
