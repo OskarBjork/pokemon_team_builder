@@ -25,6 +25,10 @@ dropBtn.addEventListener("click", function () {
   // console.log(dropDownContentDiv.classList);
 });
 
+dropDiv.addEventListener("mouseleave", function () {
+  dropDownContentDiv.classList.add("hidden");
+});
+
 // dropBtn.addEventListener("");
 
 for (let i = 0; i < dropDownContents.length; i++) {
