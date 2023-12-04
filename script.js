@@ -1,13 +1,13 @@
-let foo = document.querySelector(".lol");
-// alert(foo);
+// TODO: Organisera pokemons efter type?
+
+const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
+const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
+const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 
 const dropDiv = document.querySelector(".dropdown");
 const dropBtn = document.querySelector(".dropbtn");
 const dropDownContentDiv = document.querySelector(".dropdown-content");
 const dropDownContents = dropDownContentDiv.childNodes;
-
-// console.log(dropDownContents);
-// console.log(dropBtn);
 
 function changeDropDownContents(dropDownContents) {
   dropDownContents.forEach(function (link) {
@@ -38,18 +38,16 @@ for (let i = 0; i < dropDownContents.length; i++) {
   dropDownContents[i].addEventListener("mouseout", function () {
     dropDownContents[i].classList.remove("hovered");
   });
-
-const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
-const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
+}
 
 const root = document.getElementById("root");
-const form = document.getElementById("addPokemonForm");
+//const form = document.getElementById("addPokemonForm");
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-form.addEventListener("submit", (event) => {
+/*form.addEventListener("submit", (event) => {
   event.preventDefault();
   const pokemonName = document
     .getElementById("newPokemonName")
@@ -71,6 +69,7 @@ form.addEventListener("submit", (event) => {
       root.appendChild(div);
     });
 });
+*/
 
 function getGenerations() {
   let generations = [];
@@ -86,6 +85,92 @@ function getGenerations() {
     });
   return generations;
 }
+
+function getEvolutionChainUrl(pokemonName) {
+  let url = "";
+  fetch(`${SPECIES_URL}/${pokemonName}`)
+    .then((response) => response.json())
+    .then((species) => (url = species.evolution_chain.url));
+  return url;
+}
+
+function getEvolutions(pokemonName) {
+  const url = getEvolutionChainUrl(pokemonName);
+
+  let evolutionStrings = [];
+  fetch(`${url}`)
+    .then((response) => response.json())
+    .then((evolution) => {
+      // Första evolutionen:
+      evolutionStrings.push(evolution.chain.species.name);
+      // De andra evolutionerna:
+      evolutionStrings.push(evolution.chain.evolves_to[0].species.name);
+      /*
+      evolutionStrings.push(
+        evolution.chain.evolves_to[0].evolves_to[0].species.name
+      );
+      */
+    });
+  return evolutionStrings;
+}
+
+function initPokemonList() {
+  const pokemonListDiv = document.querySelector(".pokemon-list-box");
+  let pokemonNames = ["bulbasaur"];
+  for (const pokemonName of pokemonNames) {
+    fetch(`${POKEMON_URL}/${pokemonName}`)
+      .then((response) => response.json())
+      .then((newPokemon) => {
+        const div = document.createElement("div");
+        const image = document.createElement("img");
+        const name = document.createElement("p");
+        const hp = document.createElement("p");
+
+        div.className = "pokemon-preview";
+
+        image.src = newPokemon.sprites.front_default;
+
+        name.textContent = capitalizeFirstLetter(newPokemon.name);
+        name.className = "pokemon-info";
+
+        hp.textContent = "HP: " + newPokemon.stats[0].base_stat;
+        hp.className = "pokemon-info";
+
+        div.appendChild(image);
+        div.appendChild(name);
+        div.appendChild(hp);
+        pokemonListDiv.appendChild(div);
+      });
+  }
+}
+
+function initPokemonParty() {
+  const pokemonListDiv = document.querySelector(".pokemon-party");
+  let pokemonNames = ["bulbasaur"];
+  for (const pokemonName of pokemonNames) {
+    console.log(pokemonName);
+    fetch(`${POKEMON_URL}/${pokemonName}`)
+      .then((response) => response.json())
+      .then((newPokemon) => {
+        const div = document.createElement("div");
+        const image = document.createElement("img");
+        const name = document.createElement("p");
+
+        div.className = "pokemon";
+
+        image.src = newPokemon.sprites.front_default;
+
+        name.textContent = capitalizeFirstLetter(newPokemon.name);
+
+        div.appendChild(image);
+        div.appendChild(name);
+        pokemonListDiv.appendChild(div);
+      });
+  }
+}
+
+initPokemonList();
+initPokemonParty();
 
 class Pokemon {
   constructor(name) {}
