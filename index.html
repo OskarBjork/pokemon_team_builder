@@ -1,17 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" type="text/css" href="styles.css" />
-</head>
-<body>
-  <form id="addPokemonForm">
-    <input type="text" id="newPokemonName"/>
-    <button type="submit">Add</button>
-  </form>
-  <div id="root"></div>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="generation-pokemon-container">
+      <div class="dropdown">
+        <button class="dropbtn">Dropdown</button>
+        <div class="dropdown-content hidden">
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
+        </div>
+      </div>
+      <div class="pokemon-party">
+        <div class="pokemon">
+          <img
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+            alt=""
+          />
+          <p>Bulbasaur</p>
+        </div>
+        <div class="pokemon">
+          <img
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+            alt=""
+          />
+          <p>Ivysaur</p>
+        </div>
+        <div class="pokemon">
+          <img
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+            alt=""
+          />
+          <p>Venusaur</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pokemon-list-box">
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+          alt=""
+        />
+        <p class="pokemon-info">Bulbasaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+          alt=""
+        />
+        <p class="pokemon-info">Ivysaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+          alt=""
+        />
+        <p class="pokemon-info">Venusaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+          alt=""
+        />
+        <p class="pokemon-info">Venusaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+          alt=""
+        />
+        <p class="pokemon-info">Venusaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+      <div class="pokemon-preview">
+        <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+          alt=""
+        />
+        <p class="pokemon-info">Venusaur</p>
+        <p class="pokemon-info">HP</p>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>
