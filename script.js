@@ -79,33 +79,25 @@ async function loadGenerationPokemon(generation) {
     // console.log(pokemon.name);
     const newPokemon = new Pokemon(pokemon.name);
     const pokemonSpriteUrl = await newPokemon.getSpriteUrl();
-    const pokemonHp = await newPokemon.getHp();
-    let pokemonDiv = createPokemonDiv(newPokemon, pokemonSpriteUrl, pokemonHp);
+    const pokemonHP = await newPokemon.getHp();
+    let pokemonDiv = createPokemonDiv(newPokemon, pokemonSpriteUrl, pokemonHP);
     pokemonListDiv.appendChild(pokemonDiv);
   });
 }
 
-function createPokemonDiv(pokemon, pokemonSpriteUrl, pokemonHp) {
-  const div = document.createElement("div");
-  const image = document.createElement("img");
-  const name = document.createElement("p");
-  const hp = document.createElement("p");
+function createPokemonDiv(pokemon, pokemonSpriteUrl, pokemonHP) {
+  const markup = `<div class="pokemon-preview">
+  <img
+    src="${pokemonSpriteUrl}"
+    alt=""
+  />
+  <p class="pokemon-info">${pokemon.name}</p>
+  <p class="pokemon-info">${pokemonHP}</p>
+</div>
+<div class="pokemon-preview">`;
+  const doc = new DOMParser().parseFromString(markup, "text/html");
 
-  div.className = "pokemon-preview";
-  // console.log(pokemon);
-  image.src = pokemonSpriteUrl;
-
-  name.textContent = pokemon.name;
-  name.className = "pokemon-info";
-
-  (hp.textContent = "HP: "), pokemonHp;
-  hp.className = "pokemon-info";
-
-  div.appendChild(image);
-  div.appendChild(name);
-  div.appendChild(hp);
-
-  return div;
+  return doc.body.firstChild;
 }
 
 async function getGenerationPokemon(generation) {
