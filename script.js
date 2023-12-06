@@ -73,6 +73,7 @@ function addParagraphEventListeners(p, generation) {
 
 async function loadGenerationPokemon(generation) {
   // console.log("loadGenerationPokemon");
+  pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {
     // console.log(pokemon.name);
