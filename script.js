@@ -118,8 +118,6 @@ class Pokemon {
   }
 }
 
-console.log(new Pokemon("pikachu"));
-
 class LegendaryPokemon extends Pokemon {
   constructor(name) {}
 }
@@ -135,69 +133,6 @@ class BabyPokemon extends Pokemon {
 class ShinyPokemon extends Pokemon {
   constructor(name) {}
 }
-
-let pokemonParty = null;
-
-class PokemonParty {
-  #pokemons;
-  #pokemonPartyDiv;
-  #pokemonLimit = 5;
-
-  constructor() {
-    this.#pokemons = new Map();
-    this.#pokemonPartyDiv = document.querySelector(".pokemon-party");
-  }
-
-  async addPokemon(pokemonName) {
-    console.log(`Limit: ${this.#pokemonLimit}, Size: ${this.#pokemons.size}`);
-    if (this.#pokemons.size == this.#pokemonLimit) {
-      return;
-    }
-
-    // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
-    if (this.#pokemons.has(pokemonName)) {
-      return;
-    }
-
-    const pokemon = new Pokemon(pokemonName);
-    this.#pokemons.set(pokemonName, {
-      pokemon: pokemon,
-      id: this.#pokemons.size + 1,
-    });
-
-    const div = document.createElement("div");
-    const image = document.createElement("img");
-    const name = document.createElement("p");
-
-    div.className = "pokemon";
-
-    image.src = await pokemon.getSpriteUrl();
-
-    name.textContent = pokemon.name;
-
-    div.appendChild(image);
-    div.appendChild(name);
-    // NOTE: Kanske flytta id genererings grej in i egen funktion?
-    div.id = "party-member-" + this.#pokemons.get(pokemonName).id;
-    div.addEventListener("click", function () {
-      //this.removePokemon(pokemonName);
-      pokemonParty.removePokemon(pokemonName);
-    });
-    this.#pokemonPartyDiv.appendChild(div);
-  }
-
-  removePokemon(pokemonName) {
-    if (!this.#pokemons.has(pokemonName)) {
-      return;
-    }
-    document
-      .getElementById("party-member-" + this.#pokemons.get(pokemonName).id)
-      .remove();
-    this.#pokemons.delete(pokemonName);
-  }
-}
-
-pokemonParty = new PokemonParty();
 
 async function initPokemonList() {
   const pokemonListDiv = document.querySelector(".pokemon-list-box");
@@ -233,9 +168,6 @@ async function initPokemonList() {
     div.appendChild(name);
     div.appendChild(hp);
     div.addEventListener("click", function () {
-      // TODO: Lägg till pokemonen i teamet om det finns utrymme
-      console.log("Selected");
-      //pokemonParty.addPokemon(pokemonName)
       partyAddPokemon(pokemonName);
     });
     pokemonListDiv.appendChild(div);
