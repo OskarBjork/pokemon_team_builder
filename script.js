@@ -78,21 +78,28 @@ async function loadGenerationPokemon(generation) {
   pokemon.forEach(async function (pokemon) {
     // console.log(pokemon.name);
     const newPokemon = new Pokemon(pokemon.name);
-    const pokemonSpriteUrl = await newPokemon.getSpriteUrl();
-    const pokemonHP = await newPokemon.getHp();
-    let pokemonDiv = createPokemonDiv(newPokemon, pokemonSpriteUrl, pokemonHP);
+    const pokemonData = await newPokemon.getData();
+    let pokemonDiv = createPokemonDiv(pokemonData);
     pokemonListDiv.appendChild(pokemonDiv);
   });
 }
 
-function createPokemonDiv(pokemon, pokemonSpriteUrl, pokemonHP) {
+function createPokemonDiv(pokemonData) {
   const markup = `<div class="pokemon-preview">
   <img
-    src="${pokemonSpriteUrl}"
+    src="${pokemonData.sprites.front_default}"
     alt=""
   />
-  <p class="pokemon-info">${pokemon.name}</p>
-  <p class="pokemon-info">${pokemonHP}</p>
+  <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
+  <p class="pokemon-info">HP: ${pokemonData.stats[0].base_stat}</p>
+  <p class="pokemon-info">ATK: ${pokemonData.stats[1].base_stat}</p>
+  <p class="pokemon-info">DEF: ${pokemonData.stats[2].base_stat}</p>
+  <p class="pokemon-info">S.ATK: ${pokemonData.stats[3].base_stat}</p>
+  <p class="pokemon-info">S.DEF: ${pokemonData.stats[4].base_stat}</p>
+  <p class="pokemon-info">SPEED: ${pokemonData.stats[5].base_stat}</p>
+  <p class="pokemon-info">Index: ${
+    pokemonData.game_indices.at(-1).game_index
+  }</p>
 </div>
 <div class="pokemon-preview">`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
@@ -175,6 +182,14 @@ class Pokemon {
       .then((response) => response.json())
       .then((newPokemon) => {
         return newPokemon.stats[0].base_stat;
+      });
+  }
+
+  async getData() {
+    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
+      .then((response) => response.json())
+      .then((newPokemon) => {
+        return newPokemon;
       });
   }
 }
