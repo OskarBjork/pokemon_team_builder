@@ -1,3 +1,6 @@
+import { partyAddPokemon } from "./modules/pokemon_party.js";
+export { Pokemon };
+
 // TODO: Organisera pokemons efter type?
 
 const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
@@ -39,37 +42,6 @@ for (let i = 0; i < dropDownContents.length; i++) {
     dropDownContents[i].classList.remove("hovered");
   });
 }
-
-const root = document.getElementById("root");
-//const form = document.getElementById("addPokemonForm");
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-/*form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const pokemonName = document
-    .getElementById("newPokemonName")
-    .value.toLowerCase();
-
-  fetch(`${POKEMON_URL}/${pokemonName}`)
-    .then((response) => response.json())
-    .then((newPokemon) => {
-      const div = document.createElement("div");
-      const image = document.createElement("img");
-      const name = document.createElement("h1");
-
-      div.className = "card";
-      image.src = newPokemon.sprites.other.dream_world.front_default;
-      name.textContent = capitalizeFirstLetter(newPokemon.name);
-
-      div.appendChild(name);
-      div.appendChild(image);
-      root.appendChild(div);
-    });
-});
-*/
 
 function getGenerations() {
   let generations = [];
@@ -114,67 +86,39 @@ function getEvolutions(pokemonName) {
   return evolutionStrings;
 }
 
-function initPokemonList() {
-  const pokemonListDiv = document.querySelector(".pokemon-list-box");
-  let pokemonNames = ["bulbasaur"];
-  for (const pokemonName of pokemonNames) {
-    fetch(`${POKEMON_URL}/${pokemonName}`)
-      .then((response) => response.json())
-      .then((newPokemon) => {
-        const div = document.createElement("div");
-        const image = document.createElement("img");
-        const name = document.createElement("p");
-        const hp = document.createElement("p");
-
-        div.className = "pokemon-preview";
-
-        image.src = newPokemon.sprites.front_default;
-
-        name.textContent = capitalizeFirstLetter(newPokemon.name);
-        name.className = "pokemon-info";
-
-        hp.textContent = "HP: " + newPokemon.stats[0].base_stat;
-        hp.className = "pokemon-info";
-
-        div.appendChild(image);
-        div.appendChild(name);
-        div.appendChild(hp);
-        pokemonListDiv.appendChild(div);
-      });
-  }
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-function initPokemonParty() {
-  const pokemonListDiv = document.querySelector(".pokemon-party");
-  let pokemonNames = ["bulbasaur"];
-  for (const pokemonName of pokemonNames) {
-    console.log(pokemonName);
-    fetch(`${POKEMON_URL}/${pokemonName}`)
-      .then((response) => response.json())
-      .then((newPokemon) => {
-        const div = document.createElement("div");
-        const image = document.createElement("img");
-        const name = document.createElement("p");
-
-        div.className = "pokemon";
-
-        image.src = newPokemon.sprites.front_default;
-
-        name.textContent = capitalizeFirstLetter(newPokemon.name);
-
-        div.appendChild(image);
-        div.appendChild(name);
-        pokemonListDiv.appendChild(div);
-      });
-  }
-}
-
-initPokemonList();
-initPokemonParty();
 
 class Pokemon {
-  constructor(name) {}
+  #name;
+
+  constructor(name) {
+    this.#name = capitalizeFirstLetter(name);
+  }
+
+  get name() {
+    return this.#name;
+  }
+
+  async getSpriteUrl() {
+    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
+      .then((response) => response.json())
+      .then((newPokemon) => {
+        return newPokemon.sprites.front_default;
+      });
+  }
+
+  async getHp() {
+    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
+      .then((response) => response.json())
+      .then((newPokemon) => {
+        return newPokemon.stats[0].base_stat;
+      });
+  }
 }
+
+console.log(new Pokemon("pikachu"));
 
 class LegendaryPokemon extends Pokemon {
   constructor(name) {}
@@ -191,3 +135,111 @@ class BabyPokemon extends Pokemon {
 class ShinyPokemon extends Pokemon {
   constructor(name) {}
 }
+
+let pokemonParty = null;
+
+class PokemonParty {
+  #pokemons;
+  #pokemonPartyDiv;
+  #pokemonLimit = 5;
+
+  constructor() {
+    this.#pokemons = new Map();
+    this.#pokemonPartyDiv = document.querySelector(".pokemon-party");
+  }
+
+  async addPokemon(pokemonName) {
+    console.log(`Limit: ${this.#pokemonLimit}, Size: ${this.#pokemons.size}`);
+    if (this.#pokemons.size == this.#pokemonLimit) {
+      return;
+    }
+
+    // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
+    if (this.#pokemons.has(pokemonName)) {
+      return;
+    }
+
+    const pokemon = new Pokemon(pokemonName);
+    this.#pokemons.set(pokemonName, {
+      pokemon: pokemon,
+      id: this.#pokemons.size + 1,
+    });
+
+    const div = document.createElement("div");
+    const image = document.createElement("img");
+    const name = document.createElement("p");
+
+    div.className = "pokemon";
+
+    image.src = await pokemon.getSpriteUrl();
+
+    name.textContent = pokemon.name;
+
+    div.appendChild(image);
+    div.appendChild(name);
+    // NOTE: Kanske flytta id genererings grej in i egen funktion?
+    div.id = "party-member-" + this.#pokemons.get(pokemonName).id;
+    div.addEventListener("click", function () {
+      //this.removePokemon(pokemonName);
+      pokemonParty.removePokemon(pokemonName);
+    });
+    this.#pokemonPartyDiv.appendChild(div);
+  }
+
+  removePokemon(pokemonName) {
+    if (!this.#pokemons.has(pokemonName)) {
+      return;
+    }
+    document
+      .getElementById("party-member-" + this.#pokemons.get(pokemonName).id)
+      .remove();
+    this.#pokemons.delete(pokemonName);
+  }
+}
+
+pokemonParty = new PokemonParty();
+
+async function initPokemonList() {
+  const pokemonListDiv = document.querySelector(".pokemon-list-box");
+  let pokemonNames = [
+    "bulbasaur",
+    "ivysaur",
+    "venusaur",
+    "pichu",
+    "pikachu",
+    "ditto",
+  ];
+  for (const pokemonName of pokemonNames) {
+    const pokemon = new Pokemon(pokemonName);
+    const pokemonSpirteUrl = await pokemon.getSpriteUrl();
+    const pokemonHp = await pokemon.getHp();
+
+    const div = document.createElement("div");
+    const image = document.createElement("img");
+    const name = document.createElement("p");
+    const hp = document.createElement("p");
+
+    div.className = "pokemon-preview";
+
+    image.src = pokemonSpirteUrl;
+
+    name.textContent = pokemon.name;
+    name.className = "pokemon-info";
+
+    hp.textContent = "HP: " + pokemonHp;
+    hp.className = "pokemon-info";
+
+    div.appendChild(image);
+    div.appendChild(name);
+    div.appendChild(hp);
+    div.addEventListener("click", function () {
+      // TODO: Lägg till pokemonen i teamet om det finns utrymme
+      console.log("Selected");
+      //pokemonParty.addPokemon(pokemonName)
+      partyAddPokemon(pokemonName);
+    });
+    pokemonListDiv.appendChild(div);
+  }
+}
+
+initPokemonList();
