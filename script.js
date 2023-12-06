@@ -10,15 +10,6 @@ const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 const dropDiv = document.querySelector(".dropdown");
 const dropBtn = document.querySelector(".dropbtn");
 const dropDownContentDiv = document.querySelector(".dropdown-content");
-const dropDownContents = dropDownContentDiv.childNodes;
-
-function changeDropDownContents(dropDownContents) {
-  dropDownContents.forEach(function (link) {
-    console.log(link);
-  });
-}
-
-changeDropDownContents(dropDownContents);
 
 // Event Listeners
 
@@ -34,28 +25,39 @@ dropDiv.addEventListener("mouseleave", function () {
 
 // dropBtn.addEventListener("");
 
-for (let i = 0; i < dropDownContents.length; i++) {
-  dropDownContents[i].addEventListener("mouseover", function () {
-    dropDownContents[i].classList.add("hovered");
-  });
-  dropDownContents[i].addEventListener("mouseout", function () {
-    dropDownContents[i].classList.remove("hovered");
-  });
+async function getGenerations() {
+  let generations = [];
+
+  try {
+    const response = await fetch(GENERATION_URL);
+    const gen_data = await response.json();
+    for (let i = 0; i < gen_data.count; ++i) {
+      generations.push({
+        name: gen_data.results[i].name,
+        url: gen_data.results[i].url,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return generations;
 }
 
-function getGenerations() {
-  let generations = [];
-  fetch(GENERATION_URL)
-    .then((response) => response.json())
-    .then((gen_data) => {
-      for (let i = 0; i < gen_data.count; ++i) {
-        generations.push({
-          name: gen_data.results[i].name,
-          url: gen_data.results[i].url,
-        });
-      }
+async function loadGenerations() {
+  const generations = await getGenerations();
+  generations.forEach(function (generation) {
+    const p = document.createElement("p");
+    p.textContent = generation.name;
+    p.addEventListener("mouseover", function () {
+      p.classList.add("hovered");
     });
-  return generations;
+    p.addEventListener("mouseout", function () {
+      p.classList.remove("hovered");
+    });
+    p.classList.add("pokemon-game-box");
+    dropDownContentDiv.appendChild(p);
+  });
 }
 
 function getEvolutionChainUrl(pokemonName) {
@@ -174,4 +176,10 @@ async function initPokemonList() {
   }
 }
 
-initPokemonList();
+loadGenerations();
+
+// const generations = getGenerations();
+
+// console.log(generations);
+
+// initPokemonList();
