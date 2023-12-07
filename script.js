@@ -40,7 +40,7 @@ closeModalButton.addEventListener("click", closeModal);
 let partyState = {
   pokemon: new Map(),
   pokemonPartyDiv: document.querySelector(".pokemon-party"),
-  pokemonLimit: 5,
+  pokemonLimit: 6,
 };
 
 let currentSelectedPokemon = null;
@@ -391,14 +391,11 @@ function partyRemovePokemon(pokemonName) {
 }
 
 async function partyAddPokemon(pokemonName) {
-  if (partyState.pokemon.size == partyState.pokemonLimit) {
+  if (partyState.pokemon.size + 1 > partyState.pokemonLimit) {
     return;
   }
 
-  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
-  if (partyState.pokemon.has(pokemonName)) {
-    return;
-  }
+  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag? Ja
 
   const pokemonData = await getPokemonData(pokemonName);
 
@@ -408,31 +405,22 @@ async function partyAddPokemon(pokemonName) {
     id: "party-member-" + (partyState.pokemon.size + 1),
   });
 
-  const div = document.createElement("div");
-  const image = document.createElement("img");
-  const name = document.createElement("p");
+  const markup = `
+  <div class="pokemon" id="${partyState.pokemon.get(pokemonName).id}">
+  <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
+  <p>${capitalizeFirstLetter(pokemon.name)}</p>
+  <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
+  </div>`;
 
-  const img2 = document.createElement("img");
-
-  img2.src = "https://cdn-icons-png.flaticon.com/512/0/128.png";
-  img2.className = "edit-pokemon-button";
-
-  div.className = "pokemon";
-
-  image.src = await pokemon.getSpriteUrl();
-
-  name.textContent = capitalizeFirstLetter(pokemon.name);
-
-  image.addEventListener("click", function () {
-    //this.removePokemon(pokemonName);
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+  const div = doc.body.firstChild;
+  div
+    .querySelector(".edit-pokemon-button")
+    .addEventListener("click", openModal.bind(null, pokemon));
+  div.querySelector(".pokemon-sprite").addEventListener("click", function () {
     partyRemovePokemon(pokemonName);
   });
-  img2.addEventListener("click", openModal.bind(null, pokemon));
-  div.appendChild(image);
-  div.appendChild(name);
-  div.appendChild(img2);
-  // NOTE: Kanske flytta id genererings grej in i egen funktion?
-  div.id = partyState.pokemon.get(pokemonName).id;
+
   partyState.pokemonPartyDiv.appendChild(div);
 }
 
