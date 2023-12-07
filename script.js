@@ -49,6 +49,8 @@ let partyState = {
 
 let currentSelectedPokemon = null;
 
+let currentGeneration = null;
+
 // FUNCTIONS
 
 async function getGenerations() {
@@ -82,6 +84,7 @@ async function loadGenerations() {
 }
 
 async function loadPokemonMoves(pokemon) {
+  editList.innerHTML = "";
   const moves = pokemon.getMoves();
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
@@ -156,7 +159,7 @@ function addParagraphEventListeners(p, generation) {
 }
 
 async function loadGenerationPokemon(generation) {
-  // console.log("loadGenerationPokemon");
+  currentGeneration = generation;
   pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {
@@ -169,12 +172,14 @@ async function loadGenerationPokemon(generation) {
 
 async function searchAndLoadPokemon() {
   const searchString = searchInputField.value.toLowerCase();
-  console.log(searchString);
-  const currentPreviewPokemon =
-    pokemonListDiv.querySelectorAll(".pokemon-preview");
+  const generationPokemon = await getGenerationPokemon(currentGeneration);
   pokemonListDiv.innerHTML = "";
-  currentPreviewPokemon.forEach(function (pokemonDiv) {
-    if (pokemonDiv.data.includes(searchString)) {
+  console.log(generationPokemon);
+  generationPokemon.forEach(async function (pokemon) {
+    if (pokemon.name.includes(searchString)) {
+      const pokemonData = await getPokemonData(pokemon.name);
+      let pokemonDiv = createPokemonDiv(pokemonData);
+      applyDivEventListeners(pokemonDiv, pokemon.name);
       pokemonListDiv.appendChild(pokemonDiv);
     }
   });
@@ -230,6 +235,7 @@ function createPokemonDiv(pokemonData) {
 }
 
 async function getGenerationPokemon(generation) {
+  console.log(generation);
   const generationUrl = generation.url;
   let pokemon = [];
   try {
