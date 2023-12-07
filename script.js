@@ -83,7 +83,7 @@ async function loadGenerationPokemon(generation) {
   });
 }
 
-async function getPokemonData(pokemonName) {
+export async function getPokemonData(pokemonName) {
   return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
     .then((response) => response.json())
     .then((newPokemon) => {
@@ -178,38 +178,24 @@ function capitalizeFirstLetter(string) {
 }
 
 class Pokemon {
-  #name;
-
-  constructor(name) {
-    this.#name = capitalizeFirstLetter(name);
+  constructor(pokemonData) {
+    this.data = pokemonData;
   }
 
   get name() {
-    return this.#name;
+    return this.data.name;
   }
 
   async getSpriteUrl() {
-    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
-      .then((response) => response.json())
-      .then((newPokemon) => {
-        return newPokemon.sprites.front_default;
-      });
+    return this.data.sprites.front_default;
   }
 
   async getHp() {
-    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
-      .then((response) => response.json())
-      .then((newPokemon) => {
-        return newPokemon.stats[0].base_stat;
-      });
+    return this.data.stats[0].base_stat;
   }
 
   async getData() {
-    return await fetch(`${POKEMON_URL}/${this.#name.toLowerCase()}`)
-      .then((response) => response.json())
-      .then((newPokemon) => {
-        return newPokemon;
-      });
+    return this.data;
   }
 }
 
@@ -241,7 +227,7 @@ async function initPokemonList() {
   ];
   for (const pokemonName of pokemonNames) {
     const pokemon = new Pokemon(pokemonName);
-    const pokemonSpirteUrl = await pokemon.getSpriteUrl();
+    const pokemonSpriteUrl = await pokemon.getSpriteUrl();
     const pokemonHp = await pokemon.getHp();
 
     const div = document.createElement("div");
@@ -251,7 +237,7 @@ async function initPokemonList() {
 
     div.className = "pokemon-preview";
 
-    image.src = pokemonSpirteUrl;
+    image.src = pokemonSpriteUrl;
 
     name.textContent = pokemon.name;
     name.className = "pokemon-info";

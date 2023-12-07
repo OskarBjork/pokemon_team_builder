@@ -1,4 +1,4 @@
-import { Pokemon } from "../script.js";
+import { Pokemon, getPokemonData } from "../script.js";
 export { partyAddPokemon };
 
 let partyState = {
@@ -33,7 +33,11 @@ async function partyAddPokemon(pokemonName) {
     return;
   }
 
-  const pokemon = new Pokemon(pokemonName);
+  const pokemonData = await getPokemonData(pokemonName);
+
+  console.log(pokemonData);
+
+  const pokemon = new Pokemon(pokemonData);
   partyState.pokemons.set(pokemonName, {
     pokemon: pokemon,
     id: "party-member-" + (partyState.pokemons.size + 1),
