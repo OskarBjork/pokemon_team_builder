@@ -203,9 +203,7 @@ function createPokemonDiv(pokemonData) {
   <p class="pokemon-info">S.ATK: ${pokemonData.stats[3].base_stat}</p>
   <p class="pokemon-info">S.DEF: ${pokemonData.stats[4].base_stat}</p>
   <p class="pokemon-info">SPEED: ${pokemonData.stats[5].base_stat}</p>
-  <p class="pokemon-info">Index: ${
-    pokemonData.game_indices.at(-1).game_index
-  }</p>
+  <p class="pokemon-info">Index: ${pokemonData.id}</p>
 </div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
 

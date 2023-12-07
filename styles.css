@@ -56,6 +56,10 @@ body {
   height: 2rem;
 }
 
+.search-bar {
+  margin-top: 1rem;
+}
+
 .pokemon-move {
   background-color: aqua;
   margin: 1rem;
