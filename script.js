@@ -92,6 +92,9 @@ async function loadPokemonMoves(pokemon) {
       if (currentSelectedPokemon == null) {
         return;
       }
+      if (currentSelectedPokemon.moves.includes(moveData)) {
+        return;
+      }
       currentSelectedPokemon.moves.push(moveData);
       updateMoveList();
     });
@@ -365,6 +368,23 @@ function closeModal() {
   modalWindow.style.display = "none";
 }
 
+function removeMove(moveName) {
+  if (currentSelectedPokemon == null) {
+    return;
+  }
+  if (moveName == "Empty move slot") {
+    return;
+  }
+  const currentMoves = currentSelectedPokemon.moves;
+  for (let i = 0; i < currentMoves.length; ++i) {
+    if (currentMoves[i].name == moveName) {
+      currentMoves.splice(i, 1);
+      updateMoveList();
+      break;
+    }
+  }
+}
+
 function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
@@ -375,9 +395,11 @@ function updateMoveList() {
     } else {
       moveName = currentMove.name;
     }
-    currentPokemonMoves.innerHTML += `<p class="pokemon-move">${capitalizeFirstLetter(
-      moveName
-    )}</p>`;
+    const p = document.createElement("p");
+    p.className = "pokemon-move";
+    p.textContent = capitalizeFirstLetter(moveName);
+    p.addEventListener("click", removeMove.bind(null, moveName));
+    currentPokemonMoves.appendChild(p);
   }
 }
 
