@@ -16,12 +16,12 @@ body {
 }
 
 .pokemon-edit-list {
-  display: flex;
-  outline: #04aa6d;
-  border: 0.3rem solid #04aa6d;
-  margin: 0.5rem;
-  width: 40rem;
-  height: 18rem;
+  margin-left: 3rem;
+  display: grid;
+  flex-direction: column;
+  overflow: scroll;
+  height: 20rem;
+  width: 38rem;
 }
 
 .pokemon-edit-modal-window {

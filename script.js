@@ -1,4 +1,4 @@
-import { partyAddPokemon } from "./modules/pokemon_party.js";
+import { partyAddPokemon, modalWindow } from "./modules/pokemon_party.js";
 export { Pokemon };
 
 // TODO: Organisera pokemons efter type?
@@ -11,6 +11,7 @@ const dropDiv = document.querySelector(".dropdown");
 const dropBtn = document.querySelector(".dropbtn");
 const dropDownContentDiv = document.querySelector(".dropdown-content");
 const pokemonListDiv = document.querySelector(".pokemon-list-box");
+const editList = modalWindow.querySelector(".pokemon-edit-list");
 
 // Event Listeners
 
@@ -55,6 +56,17 @@ async function loadGenerations() {
     p.textContent = generation.name;
     addParagraphEventListeners(p, generation);
     dropDownContentDiv.appendChild(p);
+  });
+}
+
+export async function loadPokemonMoves(pokemon) {
+  const moves = await pokemon.getMoves();
+  moves.forEach(function (move) {
+    const p = document.createElement("p");
+    p.className = "pokemon-move-preview";
+    p.textContent = capitalizeFirstLetter(move.move.name);
+    editList.appendChild(p);
+    console.log(editList.children.length);
   });
 }
 
@@ -196,6 +208,10 @@ class Pokemon {
 
   async getData() {
     return this.data;
+  }
+
+  async getMoves() {
+    return this.data.moves;
   }
 }
 

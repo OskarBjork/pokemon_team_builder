@@ -1,13 +1,18 @@
-import { Pokemon, getPokemonData, capitalizeFirstLetter } from "../script.js";
+import {
+  Pokemon,
+  getPokemonData,
+  capitalizeFirstLetter,
+  loadPokemonMoves,
+} from "../script.js";
 export { partyAddPokemon };
 
 let partyState = {
-  pokemons: new Map(),
+  pokemon: new Map(),
   pokemonPartyDiv: document.querySelector(".pokemon-party"),
   pokemonLimit: 5,
 };
 
-const modalWindow = document.querySelector(".pokemon-edit-modal-window");
+export const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const closeModalButton = modalWindow.querySelector(".close-btn");
 const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
 
@@ -26,6 +31,7 @@ function openModal(pokemon) {
         <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
   `;
   pokemonStatDiv.innerHTML = markup;
+  loadPokemonMoves(pokemon);
 }
 
 function closeModal() {
@@ -33,30 +39,30 @@ function closeModal() {
 }
 
 function partyRemovePokemon(pokemonName) {
-  if (!partyState.pokemons.has(pokemonName)) {
+  if (!partyState.pokemon.has(pokemonName)) {
     return;
   }
 
-  document.getElementById(partyState.pokemons.get(pokemonName).id).remove();
-  partyState.pokemons.delete(pokemonName);
+  document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
+  partyState.pokemon.delete(pokemonName);
 }
 
 async function partyAddPokemon(pokemonName) {
-  if (partyState.pokemons.size == partyState.pokemonLimit) {
+  if (partyState.pokemon.size == partyState.pokemonLimit) {
     return;
   }
 
   // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
-  if (partyState.pokemons.has(pokemonName)) {
+  if (partyState.pokemon.has(pokemonName)) {
     return;
   }
 
   const pokemonData = await getPokemonData(pokemonName);
 
   const pokemon = new Pokemon(pokemonData);
-  partyState.pokemons.set(pokemonName, {
+  partyState.pokemon.set(pokemonName, {
     pokemon: pokemon,
-    id: "party-member-" + (partyState.pokemons.size + 1),
+    id: "party-member-" + (partyState.pokemon.size + 1),
   });
 
   const div = document.createElement("div");
@@ -83,6 +89,6 @@ async function partyAddPokemon(pokemonName) {
   div.appendChild(name);
   div.appendChild(img2);
   // NOTE: Kanske flytta id genererings grej in i egen funktion?
-  div.id = partyState.pokemons.get(pokemonName).id;
+  div.id = partyState.pokemon.get(pokemonName).id;
   partyState.pokemonPartyDiv.appendChild(div);
 }
