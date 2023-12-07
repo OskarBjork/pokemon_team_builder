@@ -60,13 +60,12 @@ async function loadGenerations() {
 }
 
 export async function loadPokemonMoves(pokemon) {
-  const moves = await pokemon.getMoves();
+  const moves = pokemon.getMoves();
   moves.forEach(function (move) {
     const p = document.createElement("p");
     p.className = "pokemon-move-preview";
     p.textContent = capitalizeFirstLetter(move.move.name);
     editList.appendChild(p);
-    console.log(editList.children.length);
   });
 }
 
@@ -116,12 +115,19 @@ function applyDivEventListeners(div, pokemonName) {
 }
 
 function createPokemonDiv(pokemonData) {
+  let pokemonTypes = "";
+  pokemonData.types.forEach(function (type) {
+    pokemonTypes += " ";
+    pokemonTypes += capitalizeFirstLetter(type.type.name);
+  });
+
   const markup = `<div class="pokemon-preview">
   <img
     src="${pokemonData.sprites.front_default}"
     alt=""
   />
   <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
+  <div class="pokemon-info">Type: ${pokemonTypes}</div>
   <p class="pokemon-info">HP: ${pokemonData.stats[0].base_stat}</p>
   <p class="pokemon-info">ATK: ${pokemonData.stats[1].base_stat}</p>
   <p class="pokemon-info">DEF: ${pokemonData.stats[2].base_stat}</p>
@@ -131,8 +137,7 @@ function createPokemonDiv(pokemonData) {
   <p class="pokemon-info">Index: ${
     pokemonData.game_indices.at(-1).game_index
   }</p>
-</div>
-<div class="pokemon-preview">`;
+</div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
 
   return doc.body.firstChild;
@@ -198,19 +203,19 @@ class Pokemon {
     return this.data.name;
   }
 
-  async getSpriteUrl() {
+  getSpriteUrl() {
     return this.data.sprites.front_default;
   }
 
-  async getHp() {
+  getHp() {
     return this.data.stats[0].base_stat;
   }
 
-  async getData() {
+  getData() {
     return this.data;
   }
 
-  async getMoves() {
+  getMoves() {
     return this.data.moves;
   }
 }
