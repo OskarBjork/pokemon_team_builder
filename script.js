@@ -61,12 +61,53 @@ async function loadGenerations() {
 
 export async function loadPokemonMoves(pokemon) {
   const moves = pokemon.getMoves();
-  moves.forEach(function (move) {
-    const p = document.createElement("p");
-    p.className = "pokemon-move-preview";
-    p.textContent = capitalizeFirstLetter(move.move.name);
-    editList.appendChild(p);
+  moves.forEach(async function (move) {
+    const moveData = await getMoveData(move);
+    const moveDiv = createMoveDiv(moveData);
+    moveDiv.addEventListener("mouseover", function () {
+      moveDiv.classList.add("hovered");
+    });
+    moveDiv.addEventListener("mouseout", function () {
+      moveDiv.classList.remove("hovered");
+    });
+    editList.appendChild(moveDiv);
   });
+}
+
+async function getMoveData(move) {
+  return await fetch(move.move.url)
+    .then((response) => response.json())
+    .then((newMove) => {
+      return newMove;
+    });
+}
+
+function createMoveDiv(moveData) {
+  console.log(moveData);
+  let accuracy = "";
+  if (moveData.accuracy == null) {
+    accuracy = "Status";
+  } else {
+    accuracy = moveData.accuracy;
+  }
+  let power = "";
+  if (moveData.power == null) {
+    power = "Status";
+  } else {
+    power = moveData.power;
+  }
+  const markup = `<div class="pokemon-move-preview">
+  <p class="pokemon-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
+  <p class="pokemon-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
+  <p class="pokemon-info">Acc: ${accuracy}</p>
+  <p class="pokemon-info">Pow: ${power}</p>
+  <p class="pokemon-info">PP: ${moveData.pp}</p>
+  <p class="pokemon-info">Priority: ${moveData.priority}</p>
+  <p class="pokemon-info">Desc: ${moveData.effect_entries[0].effect}</p>
+  </div>`;
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+
+  return doc.body.firstChild;
 }
 
 function addParagraphEventListeners(p, generation) {
@@ -77,7 +118,6 @@ function addParagraphEventListeners(p, generation) {
     p.classList.remove("hovered");
   });
   p.addEventListener("click", function () {
-    console.log("click");
     loadGenerationPokemon(generation);
   });
 }

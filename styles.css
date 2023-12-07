@@ -11,6 +11,11 @@ body {
   background: linear-gradient(to right, purple, orange);
 }
 
+.pokemon-move-preview {
+  display: flex;
+  flex-direction: row;
+}
+
 .generation-pokemon-container {
   display: flex;
 }
@@ -19,17 +24,18 @@ body {
   margin-left: 3rem;
   display: grid;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   height: 20rem;
   width: 38rem;
 }
 
 .pokemon-edit-modal-window {
   position: fixed;
-  top: 5rem;
-  left: 5rem;
-  right: 5rem;
-  bottom: 5rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 9999;
   display: none;
   /* Add other styles as needed, such as background color and padding */
