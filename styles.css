@@ -28,6 +28,17 @@ body {
   padding: 20px;
 }
 
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  background-color: #04aa6d;
+  color: white;
+  border: none;
+  font-size: 1rem;
+}
+
 .edit-pokemon-button {
   color: white;
   padding: 16px;

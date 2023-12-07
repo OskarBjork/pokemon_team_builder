@@ -8,10 +8,17 @@ let partyState = {
 };
 
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
+const closeModalButton = modalWindow.querySelector(".close-btn");
+
+closeModalButton.addEventListener("click", closeModal);
 
 function openModal(pokemonName) {
   modalWindow.style.display = "block";
   // modalWindow.querySelector(".pokemon-name").textContent = pokemonName;
+}
+
+function closeModal() {
+  modalWindow.style.display = "none";
 }
 
 function partyRemovePokemon(pokemonName) {
