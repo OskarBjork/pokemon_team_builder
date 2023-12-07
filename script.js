@@ -76,11 +76,30 @@ async function loadGenerationPokemon(generation) {
   pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {
-    // console.log(pokemon.name);
-    const newPokemon = new Pokemon(pokemon.name);
-    const pokemonData = await newPokemon.getData();
+    const pokemonData = await getPokemonData(pokemon.name);
     let pokemonDiv = createPokemonDiv(pokemonData);
+    applyDivEventListeners(pokemonDiv, pokemon.name);
     pokemonListDiv.appendChild(pokemonDiv);
+  });
+}
+
+async function getPokemonData(pokemonName) {
+  return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
+    .then((response) => response.json())
+    .then((newPokemon) => {
+      return newPokemon;
+    });
+}
+
+function applyDivEventListeners(div, pokemonName) {
+  div.addEventListener("mouseover", function () {
+    div.classList.add("hovered");
+  });
+  div.addEventListener("mouseout", function () {
+    div.classList.remove("hovered");
+  });
+  div.addEventListener("click", function () {
+    partyAddPokemon(pokemonName);
   });
 }
 
