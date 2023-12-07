@@ -13,6 +13,8 @@ const dropBtn = document.querySelector(".dropbtn");
 const dropDownContentDiv = document.querySelector(".dropdown-content");
 const pokemonListDiv = document.querySelector(".pokemon-list-box");
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
+const pokemonSearchBar = document.querySelector(".search-bar");
+const searchInputField = pokemonSearchBar.querySelector("input");
 
 const closeModalButton = modalWindow.querySelector(".close-btn");
 const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
@@ -34,6 +36,8 @@ dropDiv.addEventListener("mouseleave", function () {
 });
 
 closeModalButton.addEventListener("click", closeModal);
+
+pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
 
 // GLOBALS
 
@@ -163,6 +167,19 @@ async function loadGenerationPokemon(generation) {
   });
 }
 
+async function searchAndLoadPokemon() {
+  const searchString = searchInputField.value.toLowerCase();
+  console.log(searchString);
+  const currentPreviewPokemon =
+    pokemonListDiv.querySelectorAll(".pokemon-preview");
+  pokemonListDiv.innerHTML = "";
+  currentPreviewPokemon.forEach(function (pokemonDiv) {
+    if (pokemonDiv.data.includes(searchString)) {
+      pokemonListDiv.appendChild(pokemonDiv);
+    }
+  });
+}
+
 async function getPokemonData(pokemonName) {
   return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
     .then((response) => response.json())
@@ -206,6 +223,8 @@ function createPokemonDiv(pokemonData) {
   <p class="pokemon-info">Index: ${pokemonData.id}</p>
 </div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
+
+  doc.body.firstChild.data = pokemonData.name;
 
   return doc.body.firstChild;
 }
