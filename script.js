@@ -17,6 +17,7 @@ const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const closeModalButton = modalWindow.querySelector(".close-btn");
 const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
 const editList = modalWindow.querySelector(".pokemon-edit-list");
+const currentPokemonMoves = modalWindow.querySelector(".pokemon-moves");
 
 // Event Listeners
 
@@ -92,6 +93,7 @@ async function loadPokemonMoves(pokemon) {
         return;
       }
       currentSelectedPokemon.moves.push(moveData);
+      updateMoveList();
     });
     console.log(pokemon);
     editList.appendChild(moveDiv);
@@ -341,8 +343,6 @@ async function initPokemonList() {
   }
 }
 
-loadGenerations();
-
 function openModal(pokemon) {
   currentSelectedPokemon = pokemon;
   modalWindow.style.display = "block";
@@ -357,11 +357,28 @@ function openModal(pokemon) {
         <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
   `;
   pokemonStatDiv.innerHTML = markup;
+  updateMoveList();
   loadPokemonMoves(pokemon);
 }
 
 function closeModal() {
   modalWindow.style.display = "none";
+}
+
+function updateMoveList() {
+  currentPokemonMoves.innerHTML = "";
+  for (let i = 0; i < 4; ++i) {
+    let currentMove = currentSelectedPokemon.moves[i];
+    let moveName;
+    if (currentMove == undefined) {
+      moveName = "Empty move slot";
+    } else {
+      moveName = currentMove.name;
+    }
+    currentPokemonMoves.innerHTML += `<p class="pokemon-move">${capitalizeFirstLetter(
+      moveName
+    )}</p>`;
+  }
 }
 
 function partyRemovePokemon(pokemonName) {
@@ -419,8 +436,4 @@ async function partyAddPokemon(pokemonName) {
   partyState.pokemonPartyDiv.appendChild(div);
 }
 
-// const generations = getGenerations();
-
-// console.log(generations);
-
-// initPokemonList();
+loadGenerations();
