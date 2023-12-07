@@ -1,16 +1,21 @@
-import { partyAddPokemon, modalWindow } from "./modules/pokemon_party.js";
-export { Pokemon };
-
 // TODO: Organisera pokemons efter type?
+
+// API URLS
 
 const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
 const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
 const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 
+// DOM ELEMENTS
+
 const dropDiv = document.querySelector(".dropdown");
 const dropBtn = document.querySelector(".dropbtn");
 const dropDownContentDiv = document.querySelector(".dropdown-content");
 const pokemonListDiv = document.querySelector(".pokemon-list-box");
+const modalWindow = document.querySelector(".pokemon-edit-modal-window");
+
+const closeModalButton = modalWindow.querySelector(".close-btn");
+const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
 const editList = modalWindow.querySelector(".pokemon-edit-list");
 
 // Event Listeners
@@ -27,7 +32,19 @@ dropDiv.addEventListener("mouseleave", function () {
   dropDownContentDiv.classList.add("hidden");
 });
 
-// dropBtn.addEventListener("");
+closeModalButton.addEventListener("click", closeModal);
+
+// GLOBALS
+
+let partyState = {
+  pokemon: new Map(),
+  pokemonPartyDiv: document.querySelector(".pokemon-party"),
+  pokemonLimit: 5,
+};
+
+let currentSelectedPokemon = null;
+
+// FUNCTIONS
 
 async function getGenerations() {
   let generations = [];
@@ -59,7 +76,7 @@ async function loadGenerations() {
   });
 }
 
-export async function loadPokemonMoves(pokemon) {
+async function loadPokemonMoves(pokemon) {
   const moves = pokemon.getMoves();
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
@@ -70,6 +87,13 @@ export async function loadPokemonMoves(pokemon) {
     moveDiv.addEventListener("mouseout", function () {
       moveDiv.classList.remove("hovered");
     });
+    moveDiv.addEventListener("click", function () {
+      if (currentSelectedPokemon == null) {
+        return;
+      }
+      currentSelectedPokemon.moves.push(moveData);
+    });
+    console.log(pokemon);
     editList.appendChild(moveDiv);
   });
 }
@@ -134,7 +158,7 @@ async function loadGenerationPokemon(generation) {
   });
 }
 
-export async function getPokemonData(pokemonName) {
+async function getPokemonData(pokemonName) {
   return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
     .then((response) => response.json())
     .then((newPokemon) => {
@@ -230,11 +254,12 @@ function getEvolutions(pokemonName) {
   return evolutionStrings;
 }
 
-export function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 class Pokemon {
+  moves = [];
   constructor(pokemonData) {
     this.data = pokemonData;
   }
@@ -317,6 +342,82 @@ async function initPokemonList() {
 }
 
 loadGenerations();
+
+function openModal(pokemon) {
+  currentSelectedPokemon = pokemon;
+  modalWindow.style.display = "block";
+  pokemonStatDiv.innerHTML = "";
+  const markup = `
+  <p class="pokemon-info">${capitalizeFirstLetter(pokemon.data.name)}</p>
+        <p class="pokemon-info">HP: ${pokemon.data.stats[0].base_stat}</p>
+        <p class="pokemon-info">ATK: ${pokemon.data.stats[1].base_stat}</p>
+        <p class="pokemon-info">DEF: ${pokemon.data.stats[2].base_stat}</p>
+        <p class="pokemon-info">S.ATK: ${pokemon.data.stats[3].base_stat}</p>
+        <p class="pokemon-info">S.DEF: ${pokemon.data.stats[4].base_stat}</p>
+        <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
+  `;
+  pokemonStatDiv.innerHTML = markup;
+  loadPokemonMoves(pokemon);
+}
+
+function closeModal() {
+  modalWindow.style.display = "none";
+}
+
+function partyRemovePokemon(pokemonName) {
+  if (!partyState.pokemon.has(pokemonName)) {
+    return;
+  }
+
+  document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
+  partyState.pokemon.delete(pokemonName);
+}
+
+async function partyAddPokemon(pokemonName) {
+  if (partyState.pokemon.size == partyState.pokemonLimit) {
+    return;
+  }
+
+  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
+  if (partyState.pokemon.has(pokemonName)) {
+    return;
+  }
+
+  const pokemonData = await getPokemonData(pokemonName);
+
+  const pokemon = new Pokemon(pokemonData);
+  partyState.pokemon.set(pokemonName, {
+    pokemon: pokemon,
+    id: "party-member-" + (partyState.pokemon.size + 1),
+  });
+
+  const div = document.createElement("div");
+  const image = document.createElement("img");
+  const name = document.createElement("p");
+
+  const img2 = document.createElement("img");
+
+  img2.src = "https://cdn-icons-png.flaticon.com/512/0/128.png";
+  img2.className = "edit-pokemon-button";
+
+  div.className = "pokemon";
+
+  image.src = await pokemon.getSpriteUrl();
+
+  name.textContent = capitalizeFirstLetter(pokemon.name);
+
+  image.addEventListener("click", function () {
+    //this.removePokemon(pokemonName);
+    partyRemovePokemon(pokemonName);
+  });
+  img2.addEventListener("click", openModal.bind(null, pokemon));
+  div.appendChild(image);
+  div.appendChild(name);
+  div.appendChild(img2);
+  // NOTE: Kanske flytta id genererings grej in i egen funktion?
+  div.id = partyState.pokemon.get(pokemonName).id;
+  partyState.pokemonPartyDiv.appendChild(div);
+}
 
 // const generations = getGenerations();
 
