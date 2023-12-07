@@ -15,6 +15,29 @@ body {
   display: flex;
 }
 
+.pokemon-edit-modal-window {
+  position: fixed;
+  top: 5rem;
+  left: 5rem;
+  right: 5rem;
+  bottom: 5rem;
+  z-index: 9999;
+  display: none;
+  /* Add other styles as needed, such as background color and padding */
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+.edit-pokemon-button {
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
 .pokemon-game-box {
   display: flex;
   height: 2rem;

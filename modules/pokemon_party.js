@@ -7,6 +7,13 @@ let partyState = {
   pokemonLimit: 5,
 };
 
+const modalWindow = document.querySelector(".pokemon-edit-modal-window");
+
+function openModal(pokemonName) {
+  modalWindow.style.display = "block";
+  // modalWindow.querySelector(".pokemon-name").textContent = pokemonName;
+}
+
 function partyRemovePokemon(pokemonName) {
   if (!partyState.pokemons.has(pokemonName)) {
     return;
@@ -36,19 +43,26 @@ async function partyAddPokemon(pokemonName) {
   const image = document.createElement("img");
   const name = document.createElement("p");
 
+  const img2 = document.createElement("img");
+
+  img2.src = "https://cdn-icons-png.flaticon.com/512/0/128.png";
+  img2.className = "edit-pokemon-button";
+
   div.className = "pokemon";
 
   image.src = await pokemon.getSpriteUrl();
 
   name.textContent = pokemon.name;
 
-  div.appendChild(image);
-  div.appendChild(name);
-  // NOTE: Kanske flytta id genererings grej in i egen funktion?
-  div.id = partyState.pokemons.get(pokemonName).id;
-  div.addEventListener("click", function () {
+  image.addEventListener("click", function () {
     //this.removePokemon(pokemonName);
     partyRemovePokemon(pokemonName);
   });
+  img2.addEventListener("click", openModal.bind(null, pokemonName));
+  div.appendChild(image);
+  div.appendChild(name);
+  div.appendChild(img2);
+  // NOTE: Kanske flytta id genererings grej in i egen funktion?
+  div.id = partyState.pokemons.get(pokemonName).id;
   partyState.pokemonPartyDiv.appendChild(div);
 }
