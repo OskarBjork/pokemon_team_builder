@@ -35,8 +35,6 @@ async function partyAddPokemon(pokemonName) {
 
   const pokemonData = await getPokemonData(pokemonName);
 
-  console.log(pokemonData);
-
   const pokemon = new Pokemon(pokemonData);
   partyState.pokemons.set(pokemonName, {
     pokemon: pokemon,

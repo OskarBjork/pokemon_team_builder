@@ -24,7 +24,7 @@ body {
   z-index: 9999;
   display: none;
   /* Add other styles as needed, such as background color and padding */
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: orange;
   padding: 20px;
 }
 
