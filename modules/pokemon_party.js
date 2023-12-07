@@ -1,4 +1,4 @@
-import { Pokemon, getPokemonData } from "../script.js";
+import { Pokemon, getPokemonData, capitalizeFirstLetter } from "../script.js";
 export { partyAddPokemon };
 
 let partyState = {
@@ -9,12 +9,23 @@ let partyState = {
 
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const closeModalButton = modalWindow.querySelector(".close-btn");
+const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
 
 closeModalButton.addEventListener("click", closeModal);
 
-function openModal(pokemonName) {
+function openModal(pokemon) {
   modalWindow.style.display = "block";
-  // modalWindow.querySelector(".pokemon-name").textContent = pokemonName;
+  pokemonStatDiv.innerHTML = "";
+  const markup = `
+  <p class="pokemon-info">${capitalizeFirstLetter(pokemon.data.name)}</p>
+        <p class="pokemon-info">HP: ${pokemon.data.stats[0].base_stat}</p>
+        <p class="pokemon-info">ATK: ${pokemon.data.stats[1].base_stat}</p>
+        <p class="pokemon-info">DEF: ${pokemon.data.stats[2].base_stat}</p>
+        <p class="pokemon-info">S.ATK: ${pokemon.data.stats[3].base_stat}</p>
+        <p class="pokemon-info">S.DEF: ${pokemon.data.stats[4].base_stat}</p>
+        <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
+  `;
+  pokemonStatDiv.innerHTML = markup;
 }
 
 function closeModal() {
@@ -61,13 +72,13 @@ async function partyAddPokemon(pokemonName) {
 
   image.src = await pokemon.getSpriteUrl();
 
-  name.textContent = pokemon.name;
+  name.textContent = capitalizeFirstLetter(pokemon.name);
 
   image.addEventListener("click", function () {
     //this.removePokemon(pokemonName);
     partyRemovePokemon(pokemonName);
   });
-  img2.addEventListener("click", openModal.bind(null, pokemonName));
+  img2.addEventListener("click", openModal.bind(null, pokemon));
   div.appendChild(image);
   div.appendChild(name);
   div.appendChild(img2);
