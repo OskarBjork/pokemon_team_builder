@@ -20,6 +20,8 @@ const closeModalButton = modalWindow.querySelector(".close-btn");
 const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
 const editList = modalWindow.querySelector(".pokemon-edit-list");
 const currentPokemonMoves = modalWindow.querySelector(".pokemon-moves");
+const moveSearchBar = modalWindow.querySelector(".move-search-bar");
+const moveSearchInputField = moveSearchBar.querySelector("input");
 
 // Event Listeners
 
@@ -38,6 +40,8 @@ dropDiv.addEventListener("mouseleave", function () {
 closeModalButton.addEventListener("click", closeModal);
 
 pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
+
+moveSearchInputField.addEventListener("input", searchAndLoadMoves);
 
 // GLOBALS
 
@@ -89,24 +93,26 @@ async function loadPokemonMoves(pokemon) {
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
-    moveDiv.addEventListener("mouseover", function () {
-      moveDiv.classList.add("hovered");
-    });
-    moveDiv.addEventListener("mouseout", function () {
-      moveDiv.classList.remove("hovered");
-    });
-    moveDiv.addEventListener("click", function () {
-      if (currentSelectedPokemon == null) {
-        return;
-      }
-      if (currentSelectedPokemon.moves.includes(moveData)) {
-        return;
-      }
-      currentSelectedPokemon.moves.push(moveData);
-      updateMoveList();
-    });
-    console.log(pokemon);
     editList.appendChild(moveDiv);
+  });
+}
+
+function addMoveEventListeners(moveDiv, moveData) {
+  moveDiv.addEventListener("mouseover", function () {
+    moveDiv.classList.add("hovered");
+  });
+  moveDiv.addEventListener("mouseout", function () {
+    moveDiv.classList.remove("hovered");
+  });
+  moveDiv.addEventListener("click", function () {
+    if (currentSelectedPokemon == null) {
+      return;
+    }
+    if (currentSelectedPokemon.moves.includes(moveData)) {
+      return;
+    }
+    currentSelectedPokemon.moves.push(moveData);
+    updateMoveList();
   });
 }
 
@@ -181,6 +187,20 @@ async function searchAndLoadPokemon() {
       let pokemonDiv = createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
       pokemonListDiv.appendChild(pokemonDiv);
+    }
+  });
+}
+
+async function searchAndLoadMoves() {
+  const searchString = moveSearchInputField.value.toLowerCase();
+  const pokemonMoves = await currentSelectedPokemon.getMoves();
+  editList.innerHTML = "";
+  pokemonMoves.forEach(async function (move) {
+    if (move.move.name.includes(searchString)) {
+      const moveData = await getMoveData(move);
+      let moveDiv = createMoveDiv(moveData);
+      addMoveEventListeners(moveDiv, moveData);
+      editList.appendChild(moveDiv);
     }
   });
 }
