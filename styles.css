@@ -11,8 +11,98 @@ body {
   background: linear-gradient(to right, purple, orange);
 }
 
+.pokemon-move-preview {
+  display: flex;
+  flex-direction: row;
+}
+
 .generation-pokemon-container {
   display: flex;
+}
+
+.pokemon-edit-list {
+  margin-left: 3rem;
+  display: grid;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 20rem;
+  width: 38rem;
+}
+
+.pokemon-edit-modal-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: none;
+  /* Add other styles as needed, such as background color and padding */
+  background-color: orange;
+  padding: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  background-color: #04aa6d;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  width: 5rem;
+  height: 2rem;
+}
+
+.search-bar {
+  margin-top: 1rem;
+}
+
+.pokemon-move {
+  background-color: aqua;
+  margin: 1rem;
+  padding: 1rem;
+  width: 6rem;
+  height: 2rem;
+  /* width: 100%;
+  height: 100%; */
+  /* position: relative; */
+}
+
+.pokemon-moves {
+  display: flex;
+  flex-direction: row;
+  height: 5rem;
+}
+
+.pokemon-data {
+  display: flex;
+}
+
+.move-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-pokemon-button {
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
+.pokemon-game-box {
+  display: flex;
+  height: 2rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .pokemon-list-box {
@@ -54,6 +144,7 @@ body {
 .pokemon-info {
   margin-left: 1rem;
   margin-top: 2rem;
+  display: flex;
 }
 
 /* The container <div> - needed to position the dropdown content */
@@ -76,15 +167,10 @@ body {
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+  overflow: auto;
 }
 
 /* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
 
 /* Change color of dropdown links on hover */
 /* .dropdown-content a:hover {
