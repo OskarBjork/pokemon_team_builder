@@ -137,7 +137,9 @@ function createMoveDiv(moveData) {
   } else {
     power = moveData.power;
   }
-  const markup = `<div class="pokemon-move-preview">
+  const markup = `<div id="pokemon-move-${
+    moveData.name
+  }" class="pokemon-move-preview">
   <p class="pokemon-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
   <p class="pokemon-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
   <p class="pokemon-info">Acc: ${accuracy}</p>
@@ -491,7 +493,10 @@ async function partyAddPokemon(pokemonName) {
   <div class="pokemon" id="${partyState.pokemon.get(pokemonName).id}">
   <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
+  <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
+  <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
+  </div>
   </div>`;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
@@ -499,9 +504,11 @@ async function partyAddPokemon(pokemonName) {
   div
     .querySelector(".edit-pokemon-button")
     .addEventListener("click", openModal.bind(null, pokemon));
-  div.querySelector(".pokemon-sprite").addEventListener("click", function () {
-    partyRemovePokemon(pokemonName);
-  });
+  div
+    .querySelector(".remove-pokemon-button")
+    .addEventListener("click", function () {
+      partyRemovePokemon(pokemonName);
+    });
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
