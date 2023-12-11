@@ -26,8 +26,6 @@ const moveSearchInputField = moveSearchBar.querySelector("input");
 // Event Listeners
 
 dropBtn.addEventListener("click", function () {
-  console.log("click");
-  console.log(dropDownContentDiv.classList);
   dropDownContentDiv.classList.toggle("hidden");
   // dropDownContentDiv.style.display = "block";
   // console.log(dropDownContentDiv.classList);
@@ -88,11 +86,13 @@ async function loadGenerations() {
 }
 
 async function loadPokemonMoves(pokemon) {
+  console.log(pokemon);
   editList.innerHTML = "";
   const moves = pokemon.getMoves();
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
+    addMoveEventListeners(moveDiv, moveData);
     editList.appendChild(moveDiv);
   });
 }
@@ -125,7 +125,6 @@ async function getMoveData(move) {
 }
 
 function createMoveDiv(moveData) {
-  console.log(moveData);
   let accuracy = "";
   if (moveData.accuracy == null) {
     accuracy = "Status";
@@ -180,7 +179,6 @@ async function searchAndLoadPokemon() {
   const searchString = searchInputField.value.toLowerCase();
   const generationPokemon = await getGenerationPokemon(currentGeneration);
   pokemonListDiv.innerHTML = "";
-  console.log(generationPokemon);
   generationPokemon.forEach(async function (pokemon) {
     if (pokemon.name.includes(searchString)) {
       const pokemonData = await getPokemonData(pokemon.name);
@@ -255,7 +253,6 @@ function createPokemonDiv(pokemonData) {
 }
 
 async function getGenerationPokemon(generation) {
-  console.log(generation);
   const generationUrl = generation.url;
   let pokemon = [];
   try {
@@ -460,7 +457,11 @@ async function partyAddPokemon(pokemonName) {
     return;
   }
 
-  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag? Ja
+  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
+
+  if (partyState.pokemon.has(pokemonName)) {
+    return;
+  }
 
   const pokemonData = await getPokemonData(pokemonName);
 
