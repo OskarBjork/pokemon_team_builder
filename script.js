@@ -219,6 +219,7 @@ function applyDivEventListeners(div, pokemonName) {
     div.classList.remove("hovered");
   });
   div.addEventListener("click", function () {
+    div.classList.add("hidden");
     partyAddPokemon(pokemonName);
   });
 }
@@ -230,7 +231,9 @@ function createPokemonDiv(pokemonData) {
     pokemonTypes += capitalizeFirstLetter(type.type.name);
   });
 
-  const markup = `<div class="pokemon-preview">
+  const markup = `<div id="pokemon-list-${
+    pokemonData.name
+  }" class="pokemon-preview">
   <img
     src="${pokemonData.sprites.front_default}"
     alt=""
@@ -449,6 +452,10 @@ function partyRemovePokemon(pokemonName) {
   }
 
   document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
+
+  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  pokemonListDiv.classList.remove("hidden");
+
   partyState.pokemon.delete(pokemonName);
 }
 
