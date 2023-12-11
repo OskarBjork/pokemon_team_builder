@@ -219,7 +219,6 @@ function applyDivEventListeners(div, pokemonName) {
     div.classList.remove("hovered");
   });
   div.addEventListener("click", function () {
-    div.classList.add("hidden");
     partyAddPokemon(pokemonName);
   });
 }
@@ -494,6 +493,8 @@ async function partyAddPokemon(pokemonName) {
     partyRemovePokemon(pokemonName);
   });
 
+  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  pokemonListDiv.classList.add("hidden");
   partyState.pokemonPartyDiv.appendChild(div);
 }
 
