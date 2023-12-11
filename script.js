@@ -26,8 +26,6 @@ const moveSearchInputField = moveSearchBar.querySelector("input");
 // Event Listeners
 
 dropBtn.addEventListener("click", function () {
-  console.log("click");
-  console.log(dropDownContentDiv.classList);
   dropDownContentDiv.classList.toggle("hidden");
   // dropDownContentDiv.style.display = "block";
   // console.log(dropDownContentDiv.classList);
@@ -88,11 +86,13 @@ async function loadGenerations() {
 }
 
 async function loadPokemonMoves(pokemon) {
+  console.log(pokemon);
   editList.innerHTML = "";
   const moves = pokemon.getMoves();
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
+    addMoveEventListeners(moveDiv, moveData);
     editList.appendChild(moveDiv);
   });
 }
@@ -125,7 +125,6 @@ async function getMoveData(move) {
 }
 
 function createMoveDiv(moveData) {
-  console.log(moveData);
   let accuracy = "";
   if (moveData.accuracy == null) {
     accuracy = "Status";
@@ -169,6 +168,9 @@ async function loadGenerationPokemon(generation) {
   pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {
+    if (checkIfPokemonIsInParty(pokemon.name) == true) {
+      return;
+    }
     const pokemonData = await getPokemonData(pokemon.name);
     let pokemonDiv = createPokemonDiv(pokemonData);
     applyDivEventListeners(pokemonDiv, pokemon.name);
@@ -180,15 +182,21 @@ async function searchAndLoadPokemon() {
   const searchString = searchInputField.value.toLowerCase();
   const generationPokemon = await getGenerationPokemon(currentGeneration);
   pokemonListDiv.innerHTML = "";
-  console.log(generationPokemon);
   generationPokemon.forEach(async function (pokemon) {
-    if (pokemon.name.includes(searchString)) {
+    if (
+      pokemon.name.includes(searchString) &&
+      checkIfPokemonIsInParty(pokemon.name) == false
+    ) {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
       pokemonListDiv.appendChild(pokemonDiv);
     }
   });
+}
+
+function checkIfPokemonIsInParty(pokemonName) {
+  return partyState.pokemon.has(pokemonName);
 }
 
 async function searchAndLoadMoves() {
@@ -232,7 +240,9 @@ function createPokemonDiv(pokemonData) {
     pokemonTypes += capitalizeFirstLetter(type.type.name);
   });
 
-  const markup = `<div class="pokemon-preview">
+  const markup = `<div id="pokemon-list-${
+    pokemonData.name
+  }" class="pokemon-preview">
   <img
     src="${pokemonData.sprites.front_default}"
     alt=""
@@ -255,7 +265,6 @@ function createPokemonDiv(pokemonData) {
 }
 
 async function getGenerationPokemon(generation) {
-  console.log(generation);
   const generationUrl = generation.url;
   let pokemon = [];
   try {
@@ -452,6 +461,10 @@ function partyRemovePokemon(pokemonName) {
   }
 
   document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
+
+  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  pokemonListDiv.classList.remove("hidden");
+
   partyState.pokemon.delete(pokemonName);
 }
 
@@ -460,7 +473,11 @@ async function partyAddPokemon(pokemonName) {
     return;
   }
 
-  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag? Ja
+  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
+
+  if (partyState.pokemon.has(pokemonName)) {
+    return;
+  }
 
   const pokemonData = await getPokemonData(pokemonName);
 
@@ -486,7 +503,10 @@ async function partyAddPokemon(pokemonName) {
     partyRemovePokemon(pokemonName);
   });
 
+  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  pokemonListDiv.classList.add("hidden");
   partyState.pokemonPartyDiv.appendChild(div);
 }
 
 loadGenerations();
+loadGenerationPokemon({ name: "generation-i", url: GENERATION_URL + "/1" });
