@@ -168,6 +168,9 @@ async function loadGenerationPokemon(generation) {
   pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {
+    if (checkIfPokemonIsInParty(pokemon.name) == true) {
+      return;
+    }
     const pokemonData = await getPokemonData(pokemon.name);
     let pokemonDiv = createPokemonDiv(pokemonData);
     applyDivEventListeners(pokemonDiv, pokemon.name);
@@ -180,13 +183,20 @@ async function searchAndLoadPokemon() {
   const generationPokemon = await getGenerationPokemon(currentGeneration);
   pokemonListDiv.innerHTML = "";
   generationPokemon.forEach(async function (pokemon) {
-    if (pokemon.name.includes(searchString)) {
+    if (
+      pokemon.name.includes(searchString) &&
+      checkIfPokemonIsInParty(pokemon.name) == false
+    ) {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
       pokemonListDiv.appendChild(pokemonDiv);
     }
   });
+}
+
+function checkIfPokemonIsInParty(pokemonName) {
+  return partyState.pokemon.has(pokemonName);
 }
 
 async function searchAndLoadMoves() {
@@ -499,3 +509,4 @@ async function partyAddPokemon(pokemonName) {
 }
 
 loadGenerations();
+loadGenerationPokemon({ name: "generation-i", url: GENERATION_URL + "/1" });
