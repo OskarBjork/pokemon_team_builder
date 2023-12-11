@@ -113,6 +113,7 @@ function addMoveEventListeners(moveDiv, moveData) {
     }
     currentSelectedPokemon.moves.push(moveData);
     updateMoveList();
+    moveDiv.classList.add("hidden");
   });
 }
 
@@ -437,6 +438,8 @@ function removeMove(moveName) {
       break;
     }
   }
+  const moveDiv = document.querySelector("#pokemon-move-" + moveName);
+  moveDiv.classList.remove("hidden");
 }
 
 function updateMoveList() {
