@@ -20,7 +20,14 @@ import {
 
 // import { getGenerations } from "./functions.js";
 
-// TODO: Organisera pokemons efter type?
+// TODO: Organisera pokemon efter type?
+// TODO: Fixa hover klassen på pokemon-preview
+// TODO: Fixa ordningen av pokemon i sökresultatet
+// TODO: Fixa så att partyt fylls upp när en pokemon tas bort
+// TODO: Fixa hela move UI:n
+// TODO: Nytt typsnitt till pokemon namn
+// TODO: Fixa API calls för pokemon som har flera former
+// TODO: Fixa overflow så att det visas fler pokemon i sökresultatet
 
 // DOM ELEMENTS
 
