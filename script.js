@@ -1,4 +1,13 @@
 import { typeColors } from "./config.js";
+import {
+  addMoveEventListeners,
+  createMoveDiv,
+  getMoveData,
+  capitalizeFirstLetter,
+  createPokemonDiv,
+} from "./functions.js";
+
+// import { getGenerations } from "./functions.js";
 
 // TODO: Organisera pokemons efter type?
 
@@ -56,7 +65,6 @@ let currentSelectedPokemon = null;
 let currentGeneration = null;
 
 // FUNCTIONS
-
 async function getGenerations() {
   let generations = [];
 
@@ -99,75 +107,6 @@ async function loadPokemonMoves(pokemon) {
   });
 }
 
-function addMoveEventListeners(moveDiv, moveData) {
-  moveDiv.addEventListener("mouseover", function () {
-    moveDiv.classList.add("hovered");
-  });
-  moveDiv.addEventListener("mouseout", function () {
-    moveDiv.classList.remove("hovered");
-  });
-  moveDiv.addEventListener("click", function () {
-    if (currentSelectedPokemon == null) {
-      return;
-    }
-    if (currentSelectedPokemon.moves.includes(moveData)) {
-      return;
-    }
-    currentSelectedPokemon.moves.push(moveData);
-    updateMoveList();
-    moveDiv.classList.add("hidden");
-  });
-}
-
-async function getMoveData(move) {
-  return await fetch(move.move.url)
-    .then((response) => response.json())
-    .then((newMove) => {
-      return newMove;
-    });
-}
-
-function createMoveDiv(moveData) {
-  let accuracy = "";
-  if (moveData.accuracy == null) {
-    accuracy = "Status";
-  } else {
-    accuracy = moveData.accuracy;
-  }
-  let power = "";
-  if (moveData.power == null) {
-    power = "Status";
-  } else {
-    power = moveData.power;
-  }
-  const markup = `<div id="pokemon-move-${
-    moveData.name
-  }" class="pokemon-move-preview">
-  <p class="pokemon-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <p class="pokemon-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
-  <p class="pokemon-info">Acc: ${accuracy}</p>
-  <p class="pokemon-info">Pow: ${power}</p>
-  <p class="pokemon-info">PP: ${moveData.pp}</p>
-  <p class="pokemon-info">Priority: ${moveData.priority}</p>
-  <p class="pokemon-info">Desc: ${moveData.effect_entries[0].effect}</p>
-  </div>`;
-  const doc = new DOMParser().parseFromString(markup, "text/html");
-
-  return doc.body.firstChild;
-}
-
-function addParagraphEventListeners(p, generation) {
-  p.addEventListener("mouseover", function () {
-    p.classList.add("hovered");
-  });
-  p.addEventListener("mouseout", function () {
-    p.classList.remove("hovered");
-  });
-  p.addEventListener("click", function () {
-    loadGenerationPokemon(generation);
-  });
-}
-
 async function loadGenerationPokemon(generation) {
   currentGeneration = generation;
   pokemonListDiv.innerHTML = "";
@@ -198,6 +137,16 @@ async function searchAndLoadPokemon() {
       pokemonListDiv.appendChild(pokemonDiv);
     }
   });
+}
+
+export function addParagraphEventListeners(p, generation) {
+  p.addEventListener("mouseover", function () {
+    p.classList.add("hovered");
+  });
+  p.addEventListener("mouseout", function () {
+    p.classList.remove("hovered");
+  });
+  p.addEventListener("click", loadGenerationPokemon.bind(null, generation));
 }
 
 function checkIfPokemonIsInParty(pokemonName) {
@@ -238,37 +187,6 @@ function applyDivEventListeners(div, pokemonName) {
   });
 }
 
-function createPokemonDiv(pokemonData) {
-  let pokemonTypes = "";
-  pokemonData.types.forEach(function (type) {
-    pokemonTypes += " ";
-    pokemonTypes += capitalizeFirstLetter(type.type.name);
-  });
-
-  const markup = `<div id="pokemon-list-${
-    pokemonData.name
-  }" class="pokemon-preview">
-  <img
-    src="${pokemonData.sprites.front_default}"
-    alt=""
-  />
-  <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
-  <div class="pokemon-info">Type: ${pokemonTypes}</div>
-  <p class="pokemon-info">HP: ${pokemonData.stats[0].base_stat}</p>
-  <p class="pokemon-info">ATK: ${pokemonData.stats[1].base_stat}</p>
-  <p class="pokemon-info">DEF: ${pokemonData.stats[2].base_stat}</p>
-  <p class="pokemon-info">S.ATK: ${pokemonData.stats[3].base_stat}</p>
-  <p class="pokemon-info">S.DEF: ${pokemonData.stats[4].base_stat}</p>
-  <p class="pokemon-info">SPEED: ${pokemonData.stats[5].base_stat}</p>
-  <p class="pokemon-info">Index: ${pokemonData.id}</p>
-</div>`;
-  const doc = new DOMParser().parseFromString(markup, "text/html");
-
-  doc.body.firstChild.data = pokemonData.name;
-
-  return doc.body.firstChild;
-}
-
 async function getGenerationPokemon(generation) {
   const generationUrl = generation.url;
   let pokemon = [];
@@ -286,38 +204,6 @@ async function getGenerationPokemon(generation) {
   }
 
   return pokemon;
-}
-
-function getEvolutionChainUrl(pokemonName) {
-  let url = "";
-  fetch(`${SPECIES_URL}/${pokemonName}`)
-    .then((response) => response.json())
-    .then((species) => (url = species.evolution_chain.url));
-  return url;
-}
-
-function getEvolutions(pokemonName) {
-  const url = getEvolutionChainUrl(pokemonName);
-
-  let evolutionStrings = [];
-  fetch(`${url}`)
-    .then((response) => response.json())
-    .then((evolution) => {
-      // Första evolutionen:
-      evolutionStrings.push(evolution.chain.species.name);
-      // De andra evolutionerna:
-      evolutionStrings.push(evolution.chain.evolves_to[0].species.name);
-      /*
-      evolutionStrings.push(
-        evolution.chain.evolves_to[0].evolves_to[0].species.name
-      );
-      */
-    });
-  return evolutionStrings;
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 class Pokemon {
@@ -366,46 +252,6 @@ class BabyPokemon extends Pokemon {
 
 class ShinyPokemon extends Pokemon {
   constructor(name) {}
-}
-
-async function initPokemonList() {
-  const pokemonListDiv = document.querySelector(".pokemon-list-box");
-  let pokemonNames = [
-    "bulbasaur",
-    "ivysaur",
-    "venusaur",
-    "pichu",
-    "pikachu",
-    "ditto",
-  ];
-  for (const pokemonName of pokemonNames) {
-    const pokemon = new Pokemon(pokemonName);
-    const pokemonSpriteUrl = await pokemon.getSpriteUrl();
-    const pokemonHp = await pokemon.getHp();
-
-    const div = document.createElement("div");
-    const image = document.createElement("img");
-    const name = document.createElement("p");
-    const hp = document.createElement("p");
-
-    div.className = "pokemon-preview";
-
-    image.src = pokemonSpriteUrl;
-
-    name.textContent = pokemon.name;
-    name.className = "pokemon-info";
-
-    hp.textContent = "HP: " + pokemonHp;
-    hp.className = "pokemon-info";
-
-    div.appendChild(image);
-    div.appendChild(name);
-    div.appendChild(hp);
-    div.addEventListener("click", function () {
-      partyAddPokemon(pokemonName);
-    });
-    pokemonListDiv.appendChild(div);
-  }
 }
 
 function openModal(pokemon) {
