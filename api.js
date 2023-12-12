@@ -6,6 +6,10 @@ export const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
 export const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
 export const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 
+export function checkIfPokemonIsInParty(pokemonName, partyState) {
+  return partyState.pokemon.has(pokemonName);
+}
+
 // API FUNCTIONS
 
 export async function getGenerations() {
@@ -60,6 +64,54 @@ export async function getMoveData(move) {
     .then((newMove) => {
       return newMove;
     });
+}
+
+export async function loadGenerations(dropDown, wrapper) {
+  const generations = await getGenerations();
+  generations.forEach(function (generation) {
+    const p = document.createElement("p");
+    p.className = "pokemon-game-box";
+    p.textContent = generation.name;
+    wrapper(p, generation);
+    dropDown.appendChild(p);
+  });
+}
+
+export async function loadPokemonMoves(
+  pokemon,
+  container,
+  wrapper,
+  createMoveDiv
+) {
+  container.innerHTML = "";
+  const moves = pokemon.getMoves();
+  moves.forEach(async function (move) {
+    const moveData = await getMoveData(move);
+    const moveDiv = createMoveDiv(moveData);
+    wrapper(moveDiv, moveData);
+    container.appendChild(moveDiv);
+  });
+}
+
+export async function loadGenerationPokemon(
+  generation,
+  partyState,
+  pokemonListDiv,
+  createPokemonDiv,
+  applyDivEventListeners
+) {
+  partyState.currentGeneration = generation;
+  pokemonListDiv.innerHTML = "";
+  const pokemon = await getGenerationPokemon(generation);
+  pokemon.forEach(async function (pokemon) {
+    if (checkIfPokemonIsInParty(pokemon.name, partyState) == true) {
+      return;
+    }
+    const pokemonData = await getPokemonData(pokemon.name);
+    let pokemonDiv = createPokemonDiv(pokemonData);
+    applyDivEventListeners(pokemonDiv, pokemon.name);
+    pokemonListDiv.appendChild(pokemonDiv);
+  });
 }
 
 export class Pokemon {

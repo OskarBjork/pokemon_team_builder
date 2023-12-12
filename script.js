@@ -12,6 +12,10 @@ import {
   getGenerationPokemon,
   Pokemon,
   getMoveData,
+  loadGenerations,
+  loadPokemonMoves,
+  loadGenerationPokemon,
+  checkIfPokemonIsInParty,
 } from "./api.js";
 
 // import { getGenerations } from "./functions.js";
@@ -58,13 +62,31 @@ let partyState = {
   pokemon: new Map(),
   pokemonPartyDiv: document.querySelector(".pokemon-party"),
   pokemonLimit: 6,
+  currentSelectedPokemon: null,
+  currentGeneration: null,
 };
 
-let currentSelectedPokemon = null;
-
-let currentGeneration = null;
-
 // FUNCTIONS
+
+function addParagraphEventListeners(p, generation) {
+  p.addEventListener("mouseover", function () {
+    p.classList.add("hovered");
+  });
+  p.addEventListener("mouseout", function () {
+    p.classList.remove("hovered");
+  });
+  p.addEventListener(
+    "click",
+    loadGenerationPokemon.bind(
+      null,
+      generation,
+      partyState,
+      pokemonListDiv,
+      createPokemonDiv,
+      applyDivEventListeners
+    )
+  );
+}
 
 function addMoveEventListeners(moveDiv, moveData) {
   moveDiv.addEventListener("mouseover", function () {
@@ -74,63 +96,28 @@ function addMoveEventListeners(moveDiv, moveData) {
     moveDiv.classList.remove("hovered");
   });
   moveDiv.addEventListener("click", function () {
-    if (currentSelectedPokemon == null) {
+    if (partyState.currentSelectedPokemon == null) {
       return;
     }
-    if (currentSelectedPokemon.moves.includes(moveData)) {
+    if (partyState.currentSelectedPokemon.moves.includes(moveData)) {
       return;
     }
-    currentSelectedPokemon.moves.push(moveData);
+    partyState.currentSelectedPokemon.moves.push(moveData);
     updateMoveList();
     moveDiv.classList.add("hidden");
   });
 }
 
-async function loadGenerations() {
-  const generations = await getGenerations();
-  generations.forEach(function (generation) {
-    const p = document.createElement("p");
-    p.className = "pokemon-game-box";
-    p.textContent = generation.name;
-    addParagraphEventListeners(p, generation);
-    dropDownContentDiv.appendChild(p);
-  });
-}
-
-async function loadPokemonMoves(pokemon) {
-  editList.innerHTML = "";
-  const moves = pokemon.getMoves();
-  moves.forEach(async function (move) {
-    const moveData = await getMoveData(move);
-    const moveDiv = createMoveDiv(moveData);
-    addMoveEventListeners(moveDiv, moveData);
-    editList.appendChild(moveDiv);
-  });
-}
-
-async function loadGenerationPokemon(generation) {
-  currentGeneration = generation;
-  pokemonListDiv.innerHTML = "";
-  const pokemon = await getGenerationPokemon(generation);
-  pokemon.forEach(async function (pokemon) {
-    if (checkIfPokemonIsInParty(pokemon.name) == true) {
-      return;
-    }
-    const pokemonData = await getPokemonData(pokemon.name);
-    let pokemonDiv = createPokemonDiv(pokemonData);
-    applyDivEventListeners(pokemonDiv, pokemon.name);
-    pokemonListDiv.appendChild(pokemonDiv);
-  });
-}
-
 async function searchAndLoadPokemon() {
   const searchString = searchInputField.value.toLowerCase();
-  const generationPokemon = await getGenerationPokemon(currentGeneration);
+  const generationPokemon = await getGenerationPokemon(
+    partyState.currentGeneration
+  );
   pokemonListDiv.innerHTML = "";
   generationPokemon.forEach(async function (pokemon) {
     if (
       pokemon.name.includes(searchString) &&
-      checkIfPokemonIsInParty(pokemon.name) == false
+      checkIfPokemonIsInParty(pokemon.name, partyState) == false
     ) {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = createPokemonDiv(pokemonData);
@@ -140,23 +127,9 @@ async function searchAndLoadPokemon() {
   });
 }
 
-export function addParagraphEventListeners(p, generation) {
-  p.addEventListener("mouseover", function () {
-    p.classList.add("hovered");
-  });
-  p.addEventListener("mouseout", function () {
-    p.classList.remove("hovered");
-  });
-  p.addEventListener("click", loadGenerationPokemon.bind(null, generation));
-}
-
-function checkIfPokemonIsInParty(pokemonName) {
-  return partyState.pokemon.has(pokemonName);
-}
-
 async function searchAndLoadMoves() {
   const searchString = moveSearchInputField.value.toLowerCase();
-  const pokemonMoves = await currentSelectedPokemon.getMoves();
+  const pokemonMoves = await partyState.currentSelectedPokemon.getMoves();
   editList.innerHTML = "";
   pokemonMoves.forEach(async function (move) {
     if (move.move.name.includes(searchString)) {
@@ -181,7 +154,7 @@ function applyDivEventListeners(div, pokemonName) {
 }
 
 function openModal(modal, statDiv, pokemon) {
-  currentSelectedPokemon = pokemon;
+  partyState.currentSelectedPokemon = pokemon;
   modal.style.display = "block";
   statDiv.innerHTML = "";
   const markup = `
@@ -195,7 +168,7 @@ function openModal(modal, statDiv, pokemon) {
   `;
   statDiv.innerHTML = markup;
   updateMoveList();
-  loadPokemonMoves(pokemon);
+  loadPokemonMoves(pokemon, editList, addMoveEventListeners, createMoveDiv);
 }
 
 function closeModal() {
@@ -203,13 +176,13 @@ function closeModal() {
 }
 
 function removeMove(moveName) {
-  if (currentSelectedPokemon == null) {
+  if (partyState.currentSelectedPokemon == null) {
     return;
   }
   if (moveName == "Empty move slot") {
     return;
   }
-  const currentMoves = currentSelectedPokemon.moves;
+  const currentMoves = partyState.currentSelectedPokemon.moves;
   for (let i = 0; i < currentMoves.length; ++i) {
     if (currentMoves[i].name == moveName) {
       currentMoves.splice(i, 1);
@@ -224,7 +197,7 @@ function removeMove(moveName) {
 function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
-    let currentMove = currentSelectedPokemon.moves[i];
+    let currentMove = partyState.currentSelectedPokemon.moves[i];
     let moveName;
     if (currentMove == undefined) {
       moveName = "Empty move slot";
@@ -318,5 +291,11 @@ async function partyAddPokemon(pokemonName) {
   }
 }
 
-loadGenerations();
-loadGenerationPokemon({ name: "generation-i", url: GENERATION_URL + "/1" });
+loadGenerations(dropDownContentDiv, addParagraphEventListeners);
+loadGenerationPokemon(
+  { name: "generation-i", url: GENERATION_URL + "/1" },
+  partyState,
+  pokemonListDiv,
+  createPokemonDiv,
+  applyDivEventListeners
+);
