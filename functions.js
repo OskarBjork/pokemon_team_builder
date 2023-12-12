@@ -1,4 +1,4 @@
-import { typeColors } from "./config.js";
+import { typeColors, typeIcons } from "./config.js";
 
 export function createMoveDiv(moveData) {
   let accuracy = "";
@@ -60,13 +60,25 @@ export function createPokemonDiv(pokemonData) {
     alt=""
   />
   <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
-  <div class="pokemon-info">Type: ${pokemonTypes}</div>
-  <p class="pokemon-info">HP: ${pokemonData.stats[0].base_stat}</p>
-  <p class="pokemon-info">ATK: ${pokemonData.stats[1].base_stat}</p>
-  <p class="pokemon-info">DEF: ${pokemonData.stats[2].base_stat}</p>
-  <p class="pokemon-info">S.ATK: ${pokemonData.stats[3].base_stat}</p>
-  <p class="pokemon-info">S.DEF: ${pokemonData.stats[4].base_stat}</p>
-  <p class="pokemon-info">SPEED: ${pokemonData.stats[5].base_stat}</p>
+  ${getPokemonTypeIcons(pokemonData)}
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/13207/13207019.png" alt="" />
+  : ${pokemonData.stats[0].base_stat}</div>
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/1408/1408937.png" alt="" />
+  : ${pokemonData.stats[1].base_stat}</div>
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/3288/3288844.png" alt="" />
+  : ${pokemonData.stats[2].base_stat}</div>
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/9742/9742560.png" alt="" />
+  : ${pokemonData.stats[3].base_stat}</div>
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/5906/5906032.png" alt="" />
+  : ${pokemonData.stats[4].base_stat}</div>
+  <div class="pokemon-info">
+  <img src="https://cdn-icons-png.flaticon.com/128/9717/9717736.png" alt="" />
+  : ${pokemonData.stats[5].base_stat}</div>
   <p class="pokemon-info">Index: ${pokemonData.id}</p>
 </div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
@@ -108,4 +120,20 @@ export function getEvolutions(pokemonName) {
       */
     });
   return evolutionStrings;
+}
+
+function getPokemonTypeIcons(pokemonData) {
+  let pokemonTypeIcons = [];
+  pokemonData.types.forEach(function (type) {
+    pokemonTypeIcons.push(typeIcons[type.type.name]);
+  });
+  let markup = `<div class="pokemon-info-types"> Type:`;
+
+  pokemonTypeIcons.forEach(function (icon) {
+    markup += `<img src="${icon}" alt="" />`;
+  });
+
+  markup += `</div>`;
+
+  return markup;
 }

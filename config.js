@@ -18,3 +18,24 @@ export const typeColors = {
   rock: "#a38c21",
   water: "#4592c4",
 };
+
+export const typeIcons = {
+  bug: "https://cdn-icons-png.flaticon.com/128/3186/3186092.png",
+  dragon: "https://cdn-icons-png.flaticon.com/128/5169/5169269.png",
+  fairy: "https://cdn-icons-png.flaticon.com/128/4330/4330796.png",
+  fire: "https://cdn-icons-png.flaticon.com/128/785/785116.png",
+  ghost: "https://cdn-icons-png.flaticon.com/128/3507/3507970.png",
+  ground: "https://cdn-icons-png.flaticon.com/128/6468/6468074.png",
+  normal: "https://cdn-icons-png.flaticon.com/128/2956/2956792.png",
+  psychic: "https://cdn-icons-png.flaticon.com/128/10485/10485205.png",
+  steel: "https://cdn-icons-png.flaticon.com/128/2534/2534277.png",
+  dark: "https://cdn-icons-png.flaticon.com/128/7901/7901847.png",
+  electric: "https://cdn-icons-png.flaticon.com/128/616/616494.png",
+  fighting: "https://cdn-icons-png.flaticon.com/128/418/418171.png",
+  flying: "https://cdn-icons-png.flaticon.com/128/488/488629.png",
+  grass: "https://cdn-icons-png.flaticon.com/128/188/188333.png",
+  ice: "https://cdn-icons-png.flaticon.com/128/2530/2530064.png",
+  poison: "https://cdn-icons-png.flaticon.com/128/238/238299.png",
+  rock: "https://cdn-icons-png.flaticon.com/128/4405/4405438.png",
+  water: "https://cdn-icons-png.flaticon.com/128/427/427112.png",
+};

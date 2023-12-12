@@ -149,7 +149,7 @@ body {
   /* display: flex; */
   flex-direction: column;
   justify-content: center;
-  width: 60rem;
+  width: 70rem;
   outline: #04aa6d;
   border: 1px solid #04aa6d;
   height: 25rem;
@@ -203,9 +203,20 @@ body {
 }
 
 .pokemon-info {
-  margin-left: 1rem;
+  margin-left: 2rem;
   margin-top: 2rem;
   display: flex;
+  width: 4rem;
+  height: 2rem;
+}
+
+.pokemon-info-types {
+  margin-right: 2rem;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  width: 4rem;
+  height: 2rem;
 }
 
 .remove-pokemon-button {
