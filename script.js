@@ -1,3 +1,5 @@
+import { typeColors } from "./config.js";
+
 // TODO: Organisera pokemons efter type?
 
 // API URLS
@@ -343,6 +345,11 @@ class Pokemon {
   getMoves() {
     return this.data.moves;
   }
+
+  getColor() {
+    const primaryType = this.data.types[0].type.name;
+    return typeColors[primaryType];
+  }
 }
 
 class LegendaryPokemon extends Pokemon {
@@ -517,6 +524,10 @@ async function partyAddPokemon(pokemonName) {
     .addEventListener("click", function () {
       partyRemovePokemon(pokemonName);
     });
+
+  const pokemonColor = pokemon.getColor();
+
+  div.style.backgroundColor = pokemonColor;
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
