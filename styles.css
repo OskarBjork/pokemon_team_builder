@@ -17,6 +17,7 @@ body {
 }
 
 .generation-pokemon-container {
+  margin-top: 3rem;
   display: flex;
 }
 
@@ -29,6 +30,26 @@ body {
   overflow-x: hidden;
   height: 20rem;
   width: 38rem;
+}
+
+.generation-party-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.pokemon-party-container {
+  display: flex;
+  flex-direction: column;
+  margin: 3rem;
+}
+
+.pokemon-party-member {
+  display: flex;
+  flex-direction: row;
+  margin: 1rem;
+  width: 9rem;
+  /* align-items: center; */
+  height: 9rem;
 }
 
 .pokemon-edit-modal-window {
@@ -125,6 +146,7 @@ body {
   height: 25rem;
   margin-left: 12rem;
   overflow: auto;
+  margin-top: 1rem;
 }
 
 .pokemon-party {
@@ -137,6 +159,14 @@ body {
   /* position: relative; */
 }
 
+.pokemon-party-member-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: #04aa6d;
+  border: 1px solid #04aa6d;
+}
+
 .pokemon-btns {
   display: flex;
   flex-direction: row;
@@ -146,8 +176,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 70px;
-  border: 1px solid #04aa6d;
+  /* margin-left: 70px; */
 }
 
 .pokemon-preview {

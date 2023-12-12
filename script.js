@@ -493,14 +493,19 @@ async function partyAddPokemon(pokemonName) {
   });
 
   const markup = `
-  <div class="pokemon" id="${partyState.pokemon.get(pokemonName).id}">
+  <div class="pokemon-party-member-container" id="${
+    partyState.pokemon.get(pokemonName).id
+  }">
+  <div class="pokemon">
   <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
   <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
   <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
   </div>
-  </div>`;
+  </div>
+  </div>
+  `;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
   const div = doc.body.firstChild;
@@ -515,7 +520,16 @@ async function partyAddPokemon(pokemonName) {
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
-  partyState.pokemonPartyDiv.appendChild(div);
+
+  const pokemonPartyDivisors = document.querySelectorAll(
+    ".pokemon-party-member"
+  );
+  for (const pokemonPartyDivisor of pokemonPartyDivisors) {
+    if (pokemonPartyDivisor.children.length == 0) {
+      pokemonPartyDivisor.appendChild(div);
+      break;
+    }
+  }
 }
 
 loadGenerations();
