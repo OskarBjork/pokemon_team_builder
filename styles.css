@@ -195,6 +195,9 @@ body {
 
 .pokemon-preview {
   display: flex;
+  /* margin-bottom: 0.5rem;*/
+  outline: whitesmoke;
+  border: 1px solid whitesmoke;
   /* outline: #04aa6d;
   border: 1px solid #04aa6d; */
 }

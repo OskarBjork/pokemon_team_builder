@@ -1,22 +1,4 @@
-export function addMoveEventListeners(moveDiv, moveData) {
-  moveDiv.addEventListener("mouseover", function () {
-    moveDiv.classList.add("hovered");
-  });
-  moveDiv.addEventListener("mouseout", function () {
-    moveDiv.classList.remove("hovered");
-  });
-  moveDiv.addEventListener("click", function () {
-    if (currentSelectedPokemon == null) {
-      return;
-    }
-    if (currentSelectedPokemon.moves.includes(moveData)) {
-      return;
-    }
-    currentSelectedPokemon.moves.push(moveData);
-    updateMoveList();
-    moveDiv.classList.add("hidden");
-  });
-}
+import { typeColors } from "./config.js";
 
 export function createMoveDiv(moveData) {
   let accuracy = "";
@@ -99,7 +81,13 @@ export function createPokemonDiv(pokemonData) {
 
   doc.body.firstChild.data = pokemonData.name;
 
-  return doc.body.firstChild;
+  const pokemonDiv = doc.body.firstChild;
+
+  const pokemonColor = typeColors[pokemonData.types[0].type.name];
+
+  pokemonDiv.style.backgroundColor = pokemonColor;
+
+  return pokemonDiv;
 }
 
 export function getEvolutionChainUrl(pokemonName) {

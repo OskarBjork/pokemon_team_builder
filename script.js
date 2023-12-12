@@ -1,6 +1,5 @@
 import { typeColors } from "./config.js";
 import {
-  addMoveEventListeners,
   createMoveDiv,
   getMoveData,
   capitalizeFirstLetter,
@@ -82,6 +81,26 @@ async function getGenerations() {
   }
 
   return generations;
+}
+
+function addMoveEventListeners(moveDiv, moveData) {
+  moveDiv.addEventListener("mouseover", function () {
+    moveDiv.classList.add("hovered");
+  });
+  moveDiv.addEventListener("mouseout", function () {
+    moveDiv.classList.remove("hovered");
+  });
+  moveDiv.addEventListener("click", function () {
+    if (currentSelectedPokemon == null) {
+      return;
+    }
+    if (currentSelectedPokemon.moves.includes(moveData)) {
+      return;
+    }
+    currentSelectedPokemon.moves.push(moveData);
+    updateMoveList();
+    moveDiv.classList.add("hidden");
+  });
 }
 
 async function loadGenerations() {
