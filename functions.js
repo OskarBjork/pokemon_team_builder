@@ -30,14 +30,6 @@ export function createMoveDiv(moveData) {
   return doc.body.firstChild;
 }
 
-export async function getMoveData(move) {
-  return await fetch(move.move.url)
-    .then((response) => response.json())
-    .then((newMove) => {
-      return newMove;
-    });
-}
-
 export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

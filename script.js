@@ -1,20 +1,22 @@
 import { typeColors } from "./config.js";
 import {
   createMoveDiv,
-  getMoveData,
   capitalizeFirstLetter,
   createPokemonDiv,
 } from "./functions.js";
+import {
+  GENERATION_URL,
+  POKEMON_URL,
+  getGenerations,
+  getPokemonData,
+  getGenerationPokemon,
+  Pokemon,
+  getMoveData,
+} from "./api.js";
 
 // import { getGenerations } from "./functions.js";
 
 // TODO: Organisera pokemons efter type?
-
-// API URLS
-
-const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
-const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
-const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 
 // DOM ELEMENTS
 
@@ -38,7 +40,6 @@ const moveSearchInputField = moveSearchBar.querySelector("input");
 dropBtn.addEventListener("click", function () {
   dropDownContentDiv.classList.toggle("hidden");
   // dropDownContentDiv.style.display = "block";
-  // console.log(dropDownContentDiv.classList);
 });
 
 dropDiv.addEventListener("mouseleave", function () {
@@ -64,24 +65,6 @@ let currentSelectedPokemon = null;
 let currentGeneration = null;
 
 // FUNCTIONS
-async function getGenerations() {
-  let generations = [];
-
-  try {
-    const response = await fetch(GENERATION_URL);
-    const genData = await response.json();
-    for (let i = 0; i < genData.count; ++i) {
-      generations.push({
-        name: genData.results[i].name,
-        url: genData.results[i].url,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-
-  return generations;
-}
 
 function addMoveEventListeners(moveDiv, moveData) {
   moveDiv.addEventListener("mouseover", function () {
@@ -115,7 +98,6 @@ async function loadGenerations() {
 }
 
 async function loadPokemonMoves(pokemon) {
-  console.log(pokemon);
   editList.innerHTML = "";
   const moves = pokemon.getMoves();
   moves.forEach(async function (move) {
@@ -186,14 +168,6 @@ async function searchAndLoadMoves() {
   });
 }
 
-async function getPokemonData(pokemonName) {
-  return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
-    .then((response) => response.json())
-    .then((newPokemon) => {
-      return newPokemon;
-    });
-}
-
 function applyDivEventListeners(div, pokemonName) {
   div.addEventListener("mouseover", function () {
     div.classList.add("hovered");
@@ -206,77 +180,10 @@ function applyDivEventListeners(div, pokemonName) {
   });
 }
 
-async function getGenerationPokemon(generation) {
-  const generationUrl = generation.url;
-  let pokemon = [];
-  try {
-    const response = await fetch(generationUrl);
-    const genData = await response.json();
-    for (let i = 0; i < genData.pokemon_species.length; ++i) {
-      pokemon.push({
-        name: genData.pokemon_species[i].name,
-        url: genData.pokemon_species[i].url,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-
-  return pokemon;
-}
-
-class Pokemon {
-  moves = [];
-  constructor(pokemonData) {
-    this.data = pokemonData;
-  }
-
-  get name() {
-    return this.data.name;
-  }
-
-  getSpriteUrl() {
-    return this.data.sprites.front_default;
-  }
-
-  getHp() {
-    return this.data.stats[0].base_stat;
-  }
-
-  getData() {
-    return this.data;
-  }
-
-  getMoves() {
-    return this.data.moves;
-  }
-
-  getColor() {
-    const primaryType = this.data.types[0].type.name;
-    return typeColors[primaryType];
-  }
-}
-
-class LegendaryPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class MythicalPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class BabyPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class ShinyPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-function openModal(pokemon) {
+function openModal(modal, statDiv, pokemon) {
   currentSelectedPokemon = pokemon;
-  modalWindow.style.display = "block";
-  pokemonStatDiv.innerHTML = "";
+  modal.style.display = "block";
+  statDiv.innerHTML = "";
   const markup = `
   <p class="pokemon-info">${capitalizeFirstLetter(pokemon.data.name)}</p>
         <p class="pokemon-info">HP: ${pokemon.data.stats[0].base_stat}</p>
@@ -286,7 +193,7 @@ function openModal(pokemon) {
         <p class="pokemon-info">S.DEF: ${pokemon.data.stats[4].base_stat}</p>
         <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
   `;
-  pokemonStatDiv.innerHTML = markup;
+  statDiv.innerHTML = markup;
   updateMoveList();
   loadPokemonMoves(pokemon);
 }
@@ -383,7 +290,10 @@ async function partyAddPokemon(pokemonName) {
   const div = doc.body.firstChild;
   div
     .querySelector(".edit-pokemon-button")
-    .addEventListener("click", openModal.bind(null, pokemon));
+    .addEventListener(
+      "click",
+      openModal.bind(null, modalWindow, pokemonStatDiv, pokemon)
+    );
   div
     .querySelector(".remove-pokemon-button")
     .addEventListener("click", function () {
