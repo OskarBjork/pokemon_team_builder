@@ -54,6 +54,25 @@ pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
 
 moveSearchInputField.addEventListener("input", searchAndLoadMoves);
 
+pokemonGenerationSelector.addEventListener("change", function () {
+  let generation = null;
+  for (const gen of currentGenerations) {
+    if (
+      gen.name.toLowerCase() == pokemonGenerationSelector.value.toLowerCase()
+    ) {
+      generation = gen;
+      break;
+    }
+  }
+  loadGenerationPokemon(
+    generation,
+    partyState,
+    pokemonListDiv,
+    createPokemonDiv,
+    applyDivEventListeners
+  );
+});
+
 // GLOBALS
 
 let partyState = {
@@ -65,20 +84,6 @@ let partyState = {
 };
 
 // FUNCTIONS
-
-function addOptionEventListeners(o, generation) {
-  o.addEventListener(
-    "click",
-    loadGenerationPokemon.bind(
-      null,
-      generation,
-      partyState,
-      pokemonListDiv,
-      createPokemonDiv,
-      applyDivEventListeners
-    )
-  );
-}
 
 function addMoveEventListeners(moveDiv, moveData) {
   moveDiv.addEventListener("mouseover", function () {
@@ -283,7 +288,8 @@ async function partyAddPokemon(pokemonName) {
   }
 }
 
-loadGenerations(pokemonGenerationSelector, addOptionEventListeners);
+const currentGenerations = await loadGenerations(pokemonGenerationSelector);
+
 loadGenerationPokemon(
   { name: "generation-i", url: GENERATION_URL + "/1" },
   partyState,

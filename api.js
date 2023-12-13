@@ -66,7 +66,7 @@ export async function getMoveData(move) {
     });
 }
 
-export async function loadGenerations(genSelector, wrapper) {
+export async function loadGenerations(genSelector) {
   const generations = await getGenerations();
   generations.forEach(function (generation) {
     const o = document.createElement("option");
@@ -76,9 +76,10 @@ export async function loadGenerations(genSelector, wrapper) {
       generation.name.substr(1, 10) +
       generation.name.substr(11, generation.name.length).toUpperCase();
 
-    wrapper(o, generation);
     genSelector.appendChild(o);
   });
+
+  return generations;
 }
 
 export async function loadPokemonMoves(
