@@ -221,6 +221,11 @@ function partyRemovePokemon(pokemonName) {
     if (pokemonDiv.id === pokemonName) {
       div.innerHTML = "";
       div.style.backgroundColor = "";
+      const pokemonListDiv = document.querySelector(
+        "#pokemon-list-" + pokemonName
+      );
+      pokemonListDiv.classList.remove("hidden");
+      partyState.pokemon.delete(pokemonName);
       break;
     }
   }
