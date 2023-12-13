@@ -31,9 +31,9 @@ import {
 
 // DOM ELEMENTS
 
-const dropDiv = document.querySelector(".dropdown");
-const dropBtn = document.querySelector(".dropbtn");
-const dropDownContentDiv = document.querySelector(".dropdown-content");
+const pokemonGenerationSelector = document.querySelector(
+  ".pokemon-generation-selector"
+);
 const pokemonListDiv = document.querySelector(".pokemon-list-box");
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const pokemonSearchBar = document.querySelector(".search-bar");
@@ -47,15 +47,6 @@ const moveSearchBar = modalWindow.querySelector(".move-search-bar");
 const moveSearchInputField = moveSearchBar.querySelector("input");
 
 // Event Listeners
-
-dropBtn.addEventListener("click", function () {
-  dropDownContentDiv.classList.toggle("hidden");
-  // dropDownContentDiv.style.display = "block";
-});
-
-dropDiv.addEventListener("mouseleave", function () {
-  dropDownContentDiv.classList.add("hidden");
-});
 
 closeModalButton.addEventListener("click", closeModal);
 
@@ -75,14 +66,8 @@ let partyState = {
 
 // FUNCTIONS
 
-function addParagraphEventListeners(p, generation) {
-  p.addEventListener("mouseover", function () {
-    p.classList.add("hovered");
-  });
-  p.addEventListener("mouseout", function () {
-    p.classList.remove("hovered");
-  });
-  p.addEventListener(
+function addOptionEventListeners(o, generation) {
+  o.addEventListener(
     "click",
     loadGenerationPokemon.bind(
       null,
@@ -298,7 +283,7 @@ async function partyAddPokemon(pokemonName) {
   }
 }
 
-loadGenerations(dropDownContentDiv, addParagraphEventListeners);
+loadGenerations(pokemonGenerationSelector, addOptionEventListeners);
 loadGenerationPokemon(
   { name: "generation-i", url: GENERATION_URL + "/1" },
   partyState,

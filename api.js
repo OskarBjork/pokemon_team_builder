@@ -66,14 +66,18 @@ export async function getMoveData(move) {
     });
 }
 
-export async function loadGenerations(dropDown, wrapper) {
+export async function loadGenerations(genSelector, wrapper) {
   const generations = await getGenerations();
   generations.forEach(function (generation) {
-    const p = document.createElement("p");
-    p.className = "pokemon-game-box";
-    p.textContent = generation.name;
-    wrapper(p, generation);
-    dropDown.appendChild(p);
+    const o = document.createElement("option");
+    // TODO: Flytta till egen funktion eller förtydliga hur detta fungerar
+    o.textContent =
+      generation.name[0].toUpperCase() +
+      generation.name.substr(1, 10) +
+      generation.name.substr(11, generation.name.length).toUpperCase();
+
+    wrapper(o, generation);
+    genSelector.appendChild(o);
   });
 }
 

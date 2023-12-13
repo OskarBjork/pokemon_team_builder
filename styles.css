@@ -256,6 +256,11 @@ body {
   overflow: auto;
 }
 
+.pokemon-generation-selector {
+  cursor: pointer;
+  height: 2rem;
+}
+
 /* Links inside the dropdown */
 
 /* Change color of dropdown links on hover */
