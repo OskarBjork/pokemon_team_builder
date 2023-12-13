@@ -242,29 +242,38 @@ async function partyAddPokemon(pokemonName) {
   });
 
   const markup = `
-  <div class="pokemon-party-member-container" id="${
-    partyState.pokemon.get(pokemonName).id
-  }">
-  <div class="pokemon">
+  <div class="pokemon" id ="${partyState.pokemon.get(pokemonName).id}">
   <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
+  </div>
   <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
   <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
   </div>
   </div>
-  </div>
   `;
 
-  const doc = new DOMParser().parseFromString(markup, "text/html");
-  const div = doc.body.firstChild;
-  div
+  let availableDiv;
+
+  let pokemonPartyDivisors = document.querySelectorAll(".pokemon-party-member");
+
+  pokemonPartyDivisors = Array.from(pokemonPartyDivisors);
+
+  for (const pokemonPartyDivisor of pokemonPartyDivisors.reverse()) {
+    if (pokemonPartyDivisor.children.length == 0) {
+      availableDiv = pokemonPartyDivisor;
+    }
+  }
+
+  availableDiv.insertAdjacentHTML("beforeend", markup);
+
+  availableDiv
     .querySelector(".edit-pokemon-button")
     .addEventListener(
       "click",
       openModal.bind(null, modalWindow, pokemonStatDiv, pokemon)
     );
-  div
+  availableDiv
     .querySelector(".remove-pokemon-button")
     .addEventListener("click", function () {
       partyRemovePokemon(pokemonName);
@@ -272,20 +281,10 @@ async function partyAddPokemon(pokemonName) {
 
   const pokemonColor = pokemon.getColor();
 
-  div.style.backgroundColor = pokemonColor;
+  availableDiv.style.backgroundColor = pokemonColor;
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
-
-  const pokemonPartyDivisors = document.querySelectorAll(
-    ".pokemon-party-member"
-  );
-  for (const pokemonPartyDivisor of pokemonPartyDivisors) {
-    if (pokemonPartyDivisor.children.length == 0) {
-      pokemonPartyDivisor.appendChild(div);
-      break;
-    }
-  }
 }
 
 const currentGenerations = await loadGenerations(pokemonGenerationSelector);
