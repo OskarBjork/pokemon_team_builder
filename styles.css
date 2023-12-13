@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+
 /* Dropdown Button */
 .dropbtn {
   background-color: #04aa6d;
@@ -9,6 +11,7 @@
 
 body {
   background: linear-gradient(to right, purple, orange);
+  font-family: "Ubuntu", sans-serif;
 }
 
 .search-bar-search-results-container {
@@ -200,7 +203,12 @@ body {
   border: 1px solid whitesmoke;
   /* outline: #04aa6d;
   border: 1px solid #04aa6d; */
+  background-color: var(--bg-color);
 }
+
+/* .pokemon-preview:hover {
+  background-color: red;
+} */
 
 .pokemon-info {
   margin-left: 2rem;

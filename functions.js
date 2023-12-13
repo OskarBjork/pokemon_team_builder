@@ -51,10 +51,10 @@ export function createPokemonDiv(pokemonData) {
     pokemonTypes += " ";
     pokemonTypes += capitalizeFirstLetter(type.type.name);
   });
-
+  const pokemonColor = typeColors[pokemonData.types[0].type.name];
   const markup = `<div id="pokemon-list-${
     pokemonData.name
-  }" class="pokemon-preview">
+  }" class="pokemon-preview" style="--bg-color: ${pokemonColor}">
   <img
     src="${pokemonData.sprites.front_default}"
     alt=""
@@ -87,9 +87,7 @@ export function createPokemonDiv(pokemonData) {
 
   const pokemonDiv = doc.body.firstChild;
 
-  const pokemonColor = typeColors[pokemonData.types[0].type.name];
-
-  pokemonDiv.style.backgroundColor = pokemonColor;
+  // pokemonDiv.style.backgroundColor = pokemonColor;
 
   return pokemonDiv;
 }
