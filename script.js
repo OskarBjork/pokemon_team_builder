@@ -45,6 +45,7 @@ const editList = modalWindow.querySelector(".pokemon-edit-list");
 const currentPokemonMoves = modalWindow.querySelector(".pokemon-moves");
 const moveSearchBar = modalWindow.querySelector(".move-search-bar");
 const moveSearchInputField = moveSearchBar.querySelector("input");
+const pokemonPartyDiv = document.querySelector(".pokemon-party");
 
 // Event Listeners
 
@@ -77,7 +78,6 @@ pokemonGenerationSelector.addEventListener("change", function () {
 
 let partyState = {
   pokemon: new Map(),
-  pokemonPartyDiv: document.querySelector(".pokemon-party"),
   pokemonLimit: 6,
   currentSelectedPokemon: null,
   currentGeneration: null,
@@ -210,16 +210,27 @@ function updateMoveList() {
 }
 
 function partyRemovePokemon(pokemonName) {
-  if (!partyState.pokemon.has(pokemonName)) {
-    return;
+  if (!partyState.pokemon.has(pokemonName)) return;
+
+  for (const div of pokemonPartyDiv.children) {
+    if (div.children.length === 0) return;
+
+    console.log(div);
+
+    const pokemonDiv = div.querySelector(".pokemon");
+    if (pokemonDiv.id === pokemonName) {
+      div.innerHTML = "";
+      div.style.backgroundColor = "";
+      break;
+    }
   }
 
-  document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
+  // document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
 
-  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
-  pokemonListDiv.classList.remove("hidden");
+  // const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  // pokemonListDiv.classList.remove("hidden");
 
-  partyState.pokemon.delete(pokemonName);
+  // partyState.pokemon.delete(pokemonName);
 }
 
 async function partyAddPokemon(pokemonName) {
@@ -242,7 +253,7 @@ async function partyAddPokemon(pokemonName) {
   });
 
   const markup = `
-  <div class="pokemon" id ="${partyState.pokemon.get(pokemonName).id}">
+  <div class="pokemon" id ="${pokemonName}">
   <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
   </div>
