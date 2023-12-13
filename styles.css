@@ -40,7 +40,7 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 20rem;
-  width: 38rem;
+  width: 50rem;
 }
 
 .generation-party-container {
@@ -216,6 +216,19 @@ body {
   display: flex;
   width: 4rem;
   height: 2rem;
+}
+
+.move-info {
+  width: 2rem;
+  height: 2rem;
+  margin-left: 3rem;
+}
+
+.move-info-desc {
+  /* margin-left: 2rem; */
+  width: 10rem;
+  /* height: 2rem; */
+  margin-left: 3rem;
 }
 
 .pokemon-info-types {

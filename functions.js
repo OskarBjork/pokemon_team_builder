@@ -17,13 +17,13 @@ export function createMoveDiv(moveData) {
   const markup = `<div id="pokemon-move-${
     moveData.name
   }" class="pokemon-move-preview">
-  <p class="pokemon-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <p class="pokemon-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
-  <p class="pokemon-info">Acc: ${accuracy}</p>
-  <p class="pokemon-info">Pow: ${power}</p>
-  <p class="pokemon-info">PP: ${moveData.pp}</p>
-  <p class="pokemon-info">Priority: ${moveData.priority}</p>
-  <p class="pokemon-info">Desc: ${getMoveDesc(moveData)}</p>
+  <p class="move-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
+  <p class="move-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
+  <p class="move-info">Acc: ${accuracy}</p>
+  <p class="move-info">Pow: ${power}</p>
+  <p class="move-info">PP: ${moveData.pp}</p>
+  <p class="move-info">Priority: ${moveData.priority}</p>
+  <p class="move-info-desc">Desc: ${getMoveDesc(moveData)}</p>
   </div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
 
