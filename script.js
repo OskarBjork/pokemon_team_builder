@@ -1,16 +1,39 @@
-// TODO: Organisera pokemons efter type?
+import { typeColors } from "./config.js";
+import {
+  createMoveDiv,
+  capitalizeFirstLetter,
+  createPokemonDiv,
+} from "./functions.js";
+import {
+  GENERATION_URL,
+  POKEMON_URL,
+  getGenerations,
+  getPokemonData,
+  getGenerationPokemon,
+  Pokemon,
+  getMoveData,
+  loadGenerations,
+  loadPokemonMoves,
+  loadGenerationPokemon,
+  checkIfPokemonIsInParty,
+} from "./api.js";
 
-// API URLS
+// import { getGenerations } from "./functions.js";
 
-const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
-const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
-const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
+// TODO: Organisera pokemon efter type?
+// TODO: Fixa hover klassen på pokemon-preview
+// TODO: Fixa ordningen av pokemon i sökresultatet
+// TODO: Fixa så att partyt fylls upp när en pokemon tas bort
+// TODO: Fixa hela move UI:n
+// TODO: Nytt typsnitt till pokemon namn
+// TODO: Fixa API calls för pokemon som har flera former
+// TODO: Fixa overflow så att det visas fler pokemon i sökresultatet
 
 // DOM ELEMENTS
 
-const dropDiv = document.querySelector(".dropdown");
-const dropBtn = document.querySelector(".dropbtn");
-const dropDownContentDiv = document.querySelector(".dropdown-content");
+const pokemonGenerationSelector = document.querySelector(
+  ".pokemon-generation-selector"
+);
 const pokemonListDiv = document.querySelector(".pokemon-list-box");
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const pokemonSearchBar = document.querySelector(".search-bar");
@@ -25,16 +48,6 @@ const moveSearchInputField = moveSearchBar.querySelector("input");
 
 // Event Listeners
 
-dropBtn.addEventListener("click", function () {
-  dropDownContentDiv.classList.toggle("hidden");
-  // dropDownContentDiv.style.display = "block";
-  // console.log(dropDownContentDiv.classList);
-});
-
-dropDiv.addEventListener("mouseleave", function () {
-  dropDownContentDiv.classList.add("hidden");
-});
-
 closeModalButton.addEventListener("click", closeModal);
 
 pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
@@ -47,54 +60,24 @@ let partyState = {
   pokemon: new Map(),
   pokemonPartyDiv: document.querySelector(".pokemon-party"),
   pokemonLimit: 6,
+  currentSelectedPokemon: null,
+  currentGeneration: null,
 };
-
-let currentSelectedPokemon = null;
-
-let currentGeneration = null;
 
 // FUNCTIONS
 
-async function getGenerations() {
-  let generations = [];
-
-  try {
-    const response = await fetch(GENERATION_URL);
-    const genData = await response.json();
-    for (let i = 0; i < genData.count; ++i) {
-      generations.push({
-        name: genData.results[i].name,
-        url: genData.results[i].url,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-
-  return generations;
-}
-
-async function loadGenerations() {
-  const generations = await getGenerations();
-  generations.forEach(function (generation) {
-    const p = document.createElement("p");
-    p.className = "pokemon-game-box";
-    p.textContent = generation.name;
-    addParagraphEventListeners(p, generation);
-    dropDownContentDiv.appendChild(p);
-  });
-}
-
-async function loadPokemonMoves(pokemon) {
-  console.log(pokemon);
-  editList.innerHTML = "";
-  const moves = pokemon.getMoves();
-  moves.forEach(async function (move) {
-    const moveData = await getMoveData(move);
-    const moveDiv = createMoveDiv(moveData);
-    addMoveEventListeners(moveDiv, moveData);
-    editList.appendChild(moveDiv);
-  });
+function addOptionEventListeners(o, generation) {
+  o.addEventListener(
+    "click",
+    loadGenerationPokemon.bind(
+      null,
+      generation,
+      partyState,
+      pokemonListDiv,
+      createPokemonDiv,
+      applyDivEventListeners
+    )
+  );
 }
 
 function addMoveEventListeners(moveDiv, moveData) {
@@ -105,87 +88,28 @@ function addMoveEventListeners(moveDiv, moveData) {
     moveDiv.classList.remove("hovered");
   });
   moveDiv.addEventListener("click", function () {
-    if (currentSelectedPokemon == null) {
+    if (partyState.currentSelectedPokemon == null) {
       return;
     }
-    if (currentSelectedPokemon.moves.includes(moveData)) {
+    if (partyState.currentSelectedPokemon.moves.includes(moveData)) {
       return;
     }
-    currentSelectedPokemon.moves.push(moveData);
+    partyState.currentSelectedPokemon.moves.push(moveData);
     updateMoveList();
-  });
-}
-
-async function getMoveData(move) {
-  return await fetch(move.move.url)
-    .then((response) => response.json())
-    .then((newMove) => {
-      return newMove;
-    });
-}
-
-function createMoveDiv(moveData) {
-  let accuracy = "";
-  if (moveData.accuracy == null) {
-    accuracy = "Status";
-  } else {
-    accuracy = moveData.accuracy;
-  }
-  let power = "";
-  if (moveData.power == null) {
-    power = "Status";
-  } else {
-    power = moveData.power;
-  }
-  const markup = `<div class="pokemon-move-preview">
-  <p class="pokemon-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <p class="pokemon-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
-  <p class="pokemon-info">Acc: ${accuracy}</p>
-  <p class="pokemon-info">Pow: ${power}</p>
-  <p class="pokemon-info">PP: ${moveData.pp}</p>
-  <p class="pokemon-info">Priority: ${moveData.priority}</p>
-  <p class="pokemon-info">Desc: ${moveData.effect_entries[0].effect}</p>
-  </div>`;
-  const doc = new DOMParser().parseFromString(markup, "text/html");
-
-  return doc.body.firstChild;
-}
-
-function addParagraphEventListeners(p, generation) {
-  p.addEventListener("mouseover", function () {
-    p.classList.add("hovered");
-  });
-  p.addEventListener("mouseout", function () {
-    p.classList.remove("hovered");
-  });
-  p.addEventListener("click", function () {
-    loadGenerationPokemon(generation);
-  });
-}
-
-async function loadGenerationPokemon(generation) {
-  currentGeneration = generation;
-  pokemonListDiv.innerHTML = "";
-  const pokemon = await getGenerationPokemon(generation);
-  pokemon.forEach(async function (pokemon) {
-    if (checkIfPokemonIsInParty(pokemon.name) == true) {
-      return;
-    }
-    const pokemonData = await getPokemonData(pokemon.name);
-    let pokemonDiv = createPokemonDiv(pokemonData);
-    applyDivEventListeners(pokemonDiv, pokemon.name);
-    pokemonListDiv.appendChild(pokemonDiv);
+    moveDiv.classList.add("hidden");
   });
 }
 
 async function searchAndLoadPokemon() {
   const searchString = searchInputField.value.toLowerCase();
-  const generationPokemon = await getGenerationPokemon(currentGeneration);
+  const generationPokemon = await getGenerationPokemon(
+    partyState.currentGeneration
+  );
   pokemonListDiv.innerHTML = "";
   generationPokemon.forEach(async function (pokemon) {
     if (
       pokemon.name.includes(searchString) &&
-      checkIfPokemonIsInParty(pokemon.name) == false
+      checkIfPokemonIsInParty(pokemon.name, partyState) == false
     ) {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = createPokemonDiv(pokemonData);
@@ -195,13 +119,9 @@ async function searchAndLoadPokemon() {
   });
 }
 
-function checkIfPokemonIsInParty(pokemonName) {
-  return partyState.pokemon.has(pokemonName);
-}
-
 async function searchAndLoadMoves() {
   const searchString = moveSearchInputField.value.toLowerCase();
-  const pokemonMoves = await currentSelectedPokemon.getMoves();
+  const pokemonMoves = await partyState.currentSelectedPokemon.getMoves();
   editList.innerHTML = "";
   pokemonMoves.forEach(async function (move) {
     if (move.move.name.includes(searchString)) {
@@ -211,14 +131,6 @@ async function searchAndLoadMoves() {
       editList.appendChild(moveDiv);
     }
   });
-}
-
-async function getPokemonData(pokemonName) {
-  return await fetch(`${POKEMON_URL}/${pokemonName.toLowerCase()}`)
-    .then((response) => response.json())
-    .then((newPokemon) => {
-      return newPokemon;
-    });
 }
 
 function applyDivEventListeners(div, pokemonName) {
@@ -233,175 +145,10 @@ function applyDivEventListeners(div, pokemonName) {
   });
 }
 
-function createPokemonDiv(pokemonData) {
-  let pokemonTypes = "";
-  pokemonData.types.forEach(function (type) {
-    pokemonTypes += " ";
-    pokemonTypes += capitalizeFirstLetter(type.type.name);
-  });
-
-  const markup = `<div id="pokemon-list-${
-    pokemonData.name
-  }" class="pokemon-preview">
-  <img
-    src="${pokemonData.sprites.front_default}"
-    alt=""
-  />
-  <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
-  <div class="pokemon-info">Type: ${pokemonTypes}</div>
-  <p class="pokemon-info">HP: ${pokemonData.stats[0].base_stat}</p>
-  <p class="pokemon-info">ATK: ${pokemonData.stats[1].base_stat}</p>
-  <p class="pokemon-info">DEF: ${pokemonData.stats[2].base_stat}</p>
-  <p class="pokemon-info">S.ATK: ${pokemonData.stats[3].base_stat}</p>
-  <p class="pokemon-info">S.DEF: ${pokemonData.stats[4].base_stat}</p>
-  <p class="pokemon-info">SPEED: ${pokemonData.stats[5].base_stat}</p>
-  <p class="pokemon-info">Index: ${pokemonData.id}</p>
-</div>`;
-  const doc = new DOMParser().parseFromString(markup, "text/html");
-
-  doc.body.firstChild.data = pokemonData.name;
-
-  return doc.body.firstChild;
-}
-
-async function getGenerationPokemon(generation) {
-  const generationUrl = generation.url;
-  let pokemon = [];
-  try {
-    const response = await fetch(generationUrl);
-    const genData = await response.json();
-    for (let i = 0; i < genData.pokemon_species.length; ++i) {
-      pokemon.push({
-        name: genData.pokemon_species[i].name,
-        url: genData.pokemon_species[i].url,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-
-  return pokemon;
-}
-
-function getEvolutionChainUrl(pokemonName) {
-  let url = "";
-  fetch(`${SPECIES_URL}/${pokemonName}`)
-    .then((response) => response.json())
-    .then((species) => (url = species.evolution_chain.url));
-  return url;
-}
-
-function getEvolutions(pokemonName) {
-  const url = getEvolutionChainUrl(pokemonName);
-
-  let evolutionStrings = [];
-  fetch(`${url}`)
-    .then((response) => response.json())
-    .then((evolution) => {
-      // Första evolutionen:
-      evolutionStrings.push(evolution.chain.species.name);
-      // De andra evolutionerna:
-      evolutionStrings.push(evolution.chain.evolves_to[0].species.name);
-      /*
-      evolutionStrings.push(
-        evolution.chain.evolves_to[0].evolves_to[0].species.name
-      );
-      */
-    });
-  return evolutionStrings;
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-class Pokemon {
-  moves = [];
-  constructor(pokemonData) {
-    this.data = pokemonData;
-  }
-
-  get name() {
-    return this.data.name;
-  }
-
-  getSpriteUrl() {
-    return this.data.sprites.front_default;
-  }
-
-  getHp() {
-    return this.data.stats[0].base_stat;
-  }
-
-  getData() {
-    return this.data;
-  }
-
-  getMoves() {
-    return this.data.moves;
-  }
-}
-
-class LegendaryPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class MythicalPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class BabyPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class ShinyPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-async function initPokemonList() {
-  const pokemonListDiv = document.querySelector(".pokemon-list-box");
-  let pokemonNames = [
-    "bulbasaur",
-    "ivysaur",
-    "venusaur",
-    "pichu",
-    "pikachu",
-    "ditto",
-  ];
-  for (const pokemonName of pokemonNames) {
-    const pokemon = new Pokemon(pokemonName);
-    const pokemonSpriteUrl = await pokemon.getSpriteUrl();
-    const pokemonHp = await pokemon.getHp();
-
-    const div = document.createElement("div");
-    const image = document.createElement("img");
-    const name = document.createElement("p");
-    const hp = document.createElement("p");
-
-    div.className = "pokemon-preview";
-
-    image.src = pokemonSpriteUrl;
-
-    name.textContent = pokemon.name;
-    name.className = "pokemon-info";
-
-    hp.textContent = "HP: " + pokemonHp;
-    hp.className = "pokemon-info";
-
-    div.appendChild(image);
-    div.appendChild(name);
-    div.appendChild(hp);
-    div.addEventListener("click", function () {
-      partyAddPokemon(pokemonName);
-    });
-    pokemonListDiv.appendChild(div);
-  }
-}
-
-function openModal(pokemon) {
-  currentSelectedPokemon = pokemon;
-  modalWindow.style.display = "block";
-  pokemonStatDiv.innerHTML = "";
+function openModal(modal, statDiv, pokemon) {
+  partyState.currentSelectedPokemon = pokemon;
+  modal.style.display = "block";
+  statDiv.innerHTML = "";
   const markup = `
   <p class="pokemon-info">${capitalizeFirstLetter(pokemon.data.name)}</p>
         <p class="pokemon-info">HP: ${pokemon.data.stats[0].base_stat}</p>
@@ -411,9 +158,9 @@ function openModal(pokemon) {
         <p class="pokemon-info">S.DEF: ${pokemon.data.stats[4].base_stat}</p>
         <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
   `;
-  pokemonStatDiv.innerHTML = markup;
+  statDiv.innerHTML = markup;
   updateMoveList();
-  loadPokemonMoves(pokemon);
+  loadPokemonMoves(pokemon, editList, addMoveEventListeners, createMoveDiv);
 }
 
 function closeModal() {
@@ -421,13 +168,13 @@ function closeModal() {
 }
 
 function removeMove(moveName) {
-  if (currentSelectedPokemon == null) {
+  if (partyState.currentSelectedPokemon == null) {
     return;
   }
   if (moveName == "Empty move slot") {
     return;
   }
-  const currentMoves = currentSelectedPokemon.moves;
+  const currentMoves = partyState.currentSelectedPokemon.moves;
   for (let i = 0; i < currentMoves.length; ++i) {
     if (currentMoves[i].name == moveName) {
       currentMoves.splice(i, 1);
@@ -435,12 +182,14 @@ function removeMove(moveName) {
       break;
     }
   }
+  const moveDiv = document.querySelector("#pokemon-move-" + moveName);
+  moveDiv.classList.remove("hidden");
 }
 
 function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
-    let currentMove = currentSelectedPokemon.moves[i];
+    let currentMove = partyState.currentSelectedPokemon.moves[i];
     let moveName;
     if (currentMove == undefined) {
       moveName = "Empty move slot";
@@ -488,25 +237,57 @@ async function partyAddPokemon(pokemonName) {
   });
 
   const markup = `
-  <div class="pokemon" id="${partyState.pokemon.get(pokemonName).id}">
+  <div class="pokemon-party-member-container" id="${
+    partyState.pokemon.get(pokemonName).id
+  }">
+  <div class="pokemon">
   <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
+  <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
-  </div>`;
+  <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
+  </div>
+  </div>
+  </div>
+  `;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
   const div = doc.body.firstChild;
   div
     .querySelector(".edit-pokemon-button")
-    .addEventListener("click", openModal.bind(null, pokemon));
-  div.querySelector(".pokemon-sprite").addEventListener("click", function () {
-    partyRemovePokemon(pokemonName);
-  });
+    .addEventListener(
+      "click",
+      openModal.bind(null, modalWindow, pokemonStatDiv, pokemon)
+    );
+  div
+    .querySelector(".remove-pokemon-button")
+    .addEventListener("click", function () {
+      partyRemovePokemon(pokemonName);
+    });
+
+  const pokemonColor = pokemon.getColor();
+
+  div.style.backgroundColor = pokemonColor;
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
-  partyState.pokemonPartyDiv.appendChild(div);
+
+  const pokemonPartyDivisors = document.querySelectorAll(
+    ".pokemon-party-member"
+  );
+  for (const pokemonPartyDivisor of pokemonPartyDivisors) {
+    if (pokemonPartyDivisor.children.length == 0) {
+      pokemonPartyDivisor.appendChild(div);
+      break;
+    }
+  }
 }
 
-loadGenerations();
-loadGenerationPokemon({ name: "generation-i", url: GENERATION_URL + "/1" });
+loadGenerations(pokemonGenerationSelector, addOptionEventListeners);
+loadGenerationPokemon(
+  { name: "generation-i", url: GENERATION_URL + "/1" },
+  partyState,
+  pokemonListDiv,
+  createPokemonDiv,
+  applyDivEventListeners
+);
