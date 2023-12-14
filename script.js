@@ -211,22 +211,18 @@ function updateMoveList() {
 
 function partyRemovePokemon(pokemonName) {
   if (!partyState.pokemon.has(pokemonName)) return;
-
-  for (const div of pokemonPartyDiv.children) {
-    if (div.children.length === 0) return;
-
-    console.log(div);
-
+  const pokemonPartyArray = Array.from(pokemonPartyDiv.children);
+  for (const div of pokemonPartyArray) {
+    if (div.children.length === 0) continue;
     const pokemonDiv = div.querySelector(".pokemon");
     if (pokemonDiv.id === pokemonName) {
       div.innerHTML = "";
       div.style.backgroundColor = "";
-      const pokemonListDiv = document.querySelector(
+      const pokemonPreviewDiv = document.querySelector(
         "#pokemon-list-" + pokemonName
       );
-      pokemonListDiv.classList.remove("hidden");
+      pokemonPreviewDiv.classList.remove("hidden");
       partyState.pokemon.delete(pokemonName);
-      break;
     }
   }
 
