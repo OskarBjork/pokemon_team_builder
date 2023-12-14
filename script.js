@@ -23,7 +23,7 @@ import {
 // TODO: Organisera pokemon efter type?
 // TODO: Fixa hover klassen på pokemon-preview
 // TODO: Fixa ordningen av pokemon i sökresultatet
-// TODO: Fixa så att partyt fylls upp när en pokemon tas bort (optimera)
+// TODO: Fixa så att partyt fylls upp när en pokemon tas bort
 // TODO: Fixa hela move UI:n
 // TODO: Nytt typsnitt till pokemon namn
 // TODO: Fixa API calls för pokemon som har flera former
@@ -215,12 +215,16 @@ function partyRemovePokemon(pokemonName) {
   for (const div of pokemonPartyDiv.children) {
     if (div.children.length === 0) return;
 
+    console.log(div);
+
     const pokemonDiv = div.querySelector(".pokemon");
     if (pokemonDiv.id === pokemonName) {
       div.innerHTML = "";
       div.style.backgroundColor = "";
-      findAndShowPreviewPokemon(pokemonName);
-      updatePartyOrder(pokemonPartyDiv);
+      const pokemonListDiv = document.querySelector(
+        "#pokemon-list-" + pokemonName
+      );
+      pokemonListDiv.classList.remove("hidden");
       partyState.pokemon.delete(pokemonName);
       break;
     }
@@ -232,42 +236,6 @@ function partyRemovePokemon(pokemonName) {
   // pokemonListDiv.classList.remove("hidden");
 
   // partyState.pokemon.delete(pokemonName);
-}
-
-function updatePartyOrder(pokemonPartyDiv) {
-  for (const div of pokemonPartyDiv.children) {
-    if (div.children.length === 0) {
-      const pokemonPartyArr = Array.from(pokemonPartyDiv.children);
-      for (
-        let i = pokemonPartyArr.indexOf(div) + 1;
-        i < pokemonPartyArr.length;
-        i++
-      ) {
-        const nextSibling = pokemonPartyArr[i];
-        if (nextSibling.children.length > 0) {
-          const pokemonDiv = nextSibling.querySelector(".pokemon");
-          const pokemonBtns = nextSibling.querySelector(".pokemon-btns");
-          const pokemonName = pokemonDiv.id;
-          let color;
-          for (const pokemon of partyState.pokemon) {
-            if (pokemon[0] == pokemonName) {
-              color = typeColors[pokemon[1].pokemon.data.types[0].type.name];
-            }
-          }
-          nextSibling.innerHTML = "";
-          nextSibling.style.backgroundColor = "";
-          div.appendChild(pokemonDiv);
-          div.appendChild(pokemonBtns);
-          div.style.backgroundColor = color;
-        }
-      }
-    }
-  }
-}
-
-function findAndShowPreviewPokemon(pokemonName) {
-  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
-  pokemonListDiv.classList.remove("hidden");
 }
 
 async function partyAddPokemon(pokemonName) {
