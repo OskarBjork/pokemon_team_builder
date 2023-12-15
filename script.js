@@ -11,11 +11,15 @@ import {
   getPokemonData,
   getGenerationPokemon,
   Pokemon,
+  LegendaryPokemon,
+  MythicalPokemon,
   getMoveData,
   loadGenerations,
   loadPokemonMoves,
   loadGenerationPokemon,
   checkIfPokemonIsInParty,
+  pokemonIsLegendary,
+  pokemonIsMythical,
 } from "./api.js";
 
 // import { getGenerations } from "./functions.js";
@@ -199,7 +203,7 @@ function updateMoveList() {
     if (currentMove == undefined) {
       moveName = "Empty move slot";
     } else {
-      moveName = currentMove.name;
+      moveName = currentMove.move.name;
     }
     const p = document.createElement("p");
     p.className = "pokemon-move";
@@ -215,15 +219,15 @@ function partyRemovePokemon(pokemonName) {
   for (const div of pokemonPartyDiv.children) {
     if (div.children.length === 0) return;
 
-    console.log(div);
-
     const pokemonDiv = div.querySelector(".pokemon");
     if (pokemonDiv.id === pokemonName) {
       div.innerHTML = "";
+      div.style.borderStyle = null;
       div.style.backgroundColor = "";
       const pokemonListDiv = document.querySelector(
         "#pokemon-list-" + pokemonName
       );
+      console.log(pokemonListDiv)
       pokemonListDiv.classList.remove("hidden");
       partyState.pokemon.delete(pokemonName);
       break;
@@ -251,7 +255,14 @@ async function partyAddPokemon(pokemonName) {
 
   const pokemonData = await getPokemonData(pokemonName);
 
-  const pokemon = new Pokemon(pokemonData);
+  let pokemon;
+  if (await pokemonIsLegendary(pokemonData)) {
+    pokemon = new LegendaryPokemon(pokemonData);
+  } else if (await pokemonIsMythical(pokemonData)) {
+    pokemon = new MythicalPokemon(pokemonData);
+  } else {
+    pokemon = new Pokemon(pokemonData);
+  }
   partyState.pokemon.set(pokemonName, {
     pokemon: pokemon,
     id: "party-member-" + (partyState.pokemon.size + 1),
@@ -259,7 +270,7 @@ async function partyAddPokemon(pokemonName) {
 
   const markup = `
   <div class="pokemon" id ="${pokemonName}">
-  <img class="pokemon-sprite" src="${pokemon.getSpriteUrl()}" alt="" />
+  <img class="pokemon-sprite" src="${pokemon.spriteUrl}" alt="" />
   <p>${capitalizeFirstLetter(pokemon.name)}</p>
   </div>
   <div class="pokemon-btns">
@@ -295,9 +306,11 @@ async function partyAddPokemon(pokemonName) {
       partyRemovePokemon(pokemonName);
     });
 
-  const pokemonColor = pokemon.getColor();
+  const pokemonColor = pokemon.color;
 
   availableDiv.style.backgroundColor = pokemonColor;
+  availableDiv.style.borderStyle = "solid";
+  availableDiv.style.borderColor = pokemon.borderColor;
 
   const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");

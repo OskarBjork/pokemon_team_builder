@@ -89,7 +89,7 @@ export async function loadPokemonMoves(
   createMoveDiv
 ) {
   container.innerHTML = "";
-  const moves = pokemon.getMoves();
+  const moves = pokemon.moves;
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
@@ -119,50 +119,85 @@ export async function loadGenerationPokemon(
   });
 }
 
+export async function pokemonIsLegendary(pokemonData) {
+  const species = await fetch(pokemonData.species.url).then((response) =>
+    response.json()
+  );
+  return species.is_legendary;
+}
+
+export async function pokemonIsMythical(pokemonData) {
+  const species = await fetch(pokemonData.species.url).then((response) =>
+    response.json()
+  );
+  return species.is_mythical;
+}
+
 export class Pokemon {
-  moves = [];
+  #data;
+
   constructor(pokemonData) {
-    this.data = pokemonData;
+    this.#data = pokemonData;
   }
 
   get name() {
     return this.data.name;
   }
 
-  getSpriteUrl() {
+  get spriteUrl() {
     return this.data.sprites.front_default;
   }
 
-  getHp() {
+  get hp() {
     return this.data.stats[0].base_stat;
   }
 
-  getData() {
-    return this.data;
+  get data() {
+    return this.#data;
   }
 
-  getMoves() {
+  get moves() {
     return this.data.moves;
   }
 
-  getColor() {
+  get color() {
     const primaryType = this.data.types[0].type.name;
     return typeColors[primaryType];
   }
+
+  get borderColor() {
+    return this.color;
+  }
 }
 
-class LegendaryPokemon extends Pokemon {
-  constructor(name) {}
+export class LegendaryPokemon extends Pokemon {
+  constructor(pokemonData) {
+    super(pokemonData);
+  }
+
+  get color() {
+    return typeColors["legendary"];
+  }
+
+  get borderColor() {
+    return "#FFD700";
+  }
 }
 
-class MythicalPokemon extends Pokemon {
-  constructor(name) {}
+export class MythicalPokemon extends Pokemon {
+  constructor(pokemonData) {
+    super(pokemonData);
+  }
+
+  get color() {
+    return typeColors["mythical"];
+  }
+
+  get borderColor() {
+    return "#FFD700";
+  }
 }
 
 class BabyPokemon extends Pokemon {
-  constructor(name) {}
-}
-
-class ShinyPokemon extends Pokemon {
   constructor(name) {}
 }

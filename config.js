@@ -17,6 +17,8 @@ export const typeColors = {
   poison: "#b97fc9",
   rock: "#a38c21",
   water: "#4592c4",
+  legendary: "#ff007c",
+  mythical: "#25e8e2",
 };
 
 export const typeIcons = {
