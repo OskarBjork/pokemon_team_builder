@@ -79,7 +79,10 @@ export function createPokemonDiv(pokemonData) {
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/9717/9717736.png" alt="" />
   : ${pokemonData.stats[5].base_stat}</div>
-  <p class="pokemon-info">Index: ${pokemonData.id}</p>
+  <div class="pokemon-index">
+  Index: 
+  <p class="pokemon-index-p">${pokemonData.id}</p>
+  </div>
 </div>`;
   const doc = new DOMParser().parseFromString(markup, "text/html");
 

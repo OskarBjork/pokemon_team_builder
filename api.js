@@ -108,14 +108,31 @@ export async function loadGenerationPokemon(
   partyState.currentGeneration = generation;
   pokemonListDiv.innerHTML = "";
   const pokemon = await getGenerationPokemon(generation);
-  pokemon.forEach(async function (pokemon) {
+  pokemon.forEach(async function (pokemon) {});
+  const pokemonDivs = pokemon.map(async function (pokemon) {
     if (checkIfPokemonIsInParty(pokemon.name, partyState) == true) {
       return;
     }
     const pokemonData = await getPokemonData(pokemon.name);
     let pokemonDiv = createPokemonDiv(pokemonData);
     applyDivEventListeners(pokemonDiv, pokemon.name);
-    pokemonListDiv.appendChild(pokemonDiv);
+    return pokemonDiv;
+  });
+  const newDivs = await Promise.allSettled(pokemonDivs);
+
+  // newDivs.forEach(function (pokemonDiv) {
+  //   console.log(pokemonDiv);
+  // });
+  newDivs.sort(function (a, b) {
+    if (a.status == "rejected" || b.status == "rejected") return;
+    const aIndex = a.value.querySelector(".pokemon-index-p").textContent;
+    const bIndex = b.value.querySelector(".pokemon-index-p").textContent;
+    return aIndex - bIndex;
+  });
+  newDivs.forEach(function (pokemonPromise) {
+    if (pokemonPromise.status == "fulfilled") {
+      pokemonListDiv.appendChild(pokemonPromise.value);
+    }
   });
 }
 
