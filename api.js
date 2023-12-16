@@ -118,13 +118,15 @@ export async function loadGenerationPokemon(
     applyDivEventListeners(pokemonDiv, pokemon.name);
     return pokemonDiv;
   });
-  const newDivs = await Promise.allSettled(pokemonDivs);
+  let newDivs = await Promise.allSettled(pokemonDivs);
 
   // newDivs.forEach(function (pokemonDiv) {
   //   console.log(pokemonDiv);
   // });
+  newDivs = newDivs.filter(function (pokemonPromise) {
+    return pokemonPromise.status == "fulfilled";
+  });
   newDivs.sort(function (a, b) {
-    if (a.status == "rejected" || b.status == "rejected") return;
     const aIndex = a.value.querySelector(".pokemon-index-p").textContent;
     const bIndex = b.value.querySelector(".pokemon-index-p").textContent;
     return aIndex - bIndex;
