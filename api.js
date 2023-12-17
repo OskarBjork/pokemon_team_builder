@@ -111,6 +111,7 @@ export async function loadGenerationPokemon(
   pokemon.forEach(async function (pokemon) {});
   const pokemonDivs = pokemon.map(async function (pokemon) {
     if (checkIfPokemonIsInParty(pokemon.name, partyState) == true) {
+      console.log(partyState);
       return;
     }
     const pokemonData = await getPokemonData(pokemon.name);
@@ -124,7 +125,10 @@ export async function loadGenerationPokemon(
   //   console.log(pokemonDiv);
   // });
   newDivs = newDivs.filter(function (pokemonPromise) {
-    return pokemonPromise.status == "fulfilled";
+    return (
+      pokemonPromise.status == "fulfilled" &&
+      !(pokemonPromise.value == undefined)
+    );
   });
   newDivs.sort(function (a, b) {
     const aIndex = a.value.querySelector(".pokemon-index-p").textContent;

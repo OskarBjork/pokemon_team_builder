@@ -226,7 +226,8 @@ function partyRemovePokemon(pokemonName) {
       const pokemonPreviewDiv = document.querySelector(
         "#pokemon-list-" + pokemonName
       );
-      pokemonPreviewDiv.classList.remove("hidden");
+      if (pokemonPreviewDiv != null)
+        pokemonPreviewDiv.classList.remove("hidden");
       partyState.pokemon.delete(pokemonName);
     }
   }
