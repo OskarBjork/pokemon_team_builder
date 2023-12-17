@@ -50,6 +50,7 @@ const currentPokemonMoves = modalWindow.querySelector(".pokemon-moves");
 const moveSearchBar = modalWindow.querySelector(".move-search-bar");
 const moveSearchInputField = moveSearchBar.querySelector("input");
 const pokemonPartyDiv = document.querySelector(".pokemon-party");
+const saveBtn = document.querySelector(".save-btn");
 
 // Event Listeners
 
@@ -58,6 +59,8 @@ closeModalButton.addEventListener("click", closeModal);
 pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
 
 moveSearchInputField.addEventListener("input", searchAndLoadMoves);
+
+saveBtn.addEventListener("click", savePokemonToLocalStorage);
 
 pokemonGenerationSelector.addEventListener("change", function () {
   let generation = null;
@@ -213,6 +216,33 @@ function updateMoveList() {
   }
 }
 
+function savePokemonToLocalStorage() {
+  localStorage.clear();
+  const currentPokemonParty = Array.from(partyState.pokemon.values());
+  currentPokemonParty.forEach(function (pokemon) {
+    console.log(pokemon.pokemon.data.name);
+    localStorage.setItem(pokemon.id, pokemon.pokemon.data.name);
+  });
+}
+
+async function loadPokemonFromLocalStorage() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; ++i) {
+    let key = localStorage.key(i);
+    keys.push(key);
+  }
+  keys.sort(function (a, b) {
+    return a[a.length - 1] - b[b.length - 1]; // Inte pålitligt i alla fall
+  });
+  const promises = [];
+  keys.forEach(function (key) {
+    const pokemonName = localStorage.getItem(key);
+    promises.push(partyAddPokemon(pokemonName, true));
+  });
+
+  console.log(promises);
+}
+
 function partyRemovePokemon(pokemonName) {
   if (!partyState.pokemon.has(pokemonName)) return;
   const pokemonPartyArray = Array.from(pokemonPartyDiv.children);
@@ -240,7 +270,7 @@ function partyRemovePokemon(pokemonName) {
   // partyState.pokemon.delete(pokemonName);
 }
 
-async function partyAddPokemon(pokemonName) {
+async function partyAddPokemon(pokemonName, local = false) {
   if (partyState.pokemon.size + 1 > partyState.pokemonLimit) {
     return;
   }
@@ -284,12 +314,11 @@ async function partyAddPokemon(pokemonName) {
 
   pokemonPartyDivisors = Array.from(pokemonPartyDivisors);
 
-  for (const pokemonPartyDivisor of pokemonPartyDivisors.reverse()) {
+  pokemonPartyDivisors.reverse().forEach(function (pokemonPartyDivisor, index) {
     if (pokemonPartyDivisor.children.length == 0) {
       availableDiv = pokemonPartyDivisor;
     }
-  }
-
+  });
   availableDiv.insertAdjacentHTML("beforeend", markup);
 
   availableDiv
@@ -309,17 +338,25 @@ async function partyAddPokemon(pokemonName) {
   availableDiv.style.backgroundColor = pokemonColor;
   availableDiv.style.borderStyle = "solid";
   availableDiv.style.borderColor = pokemon.borderColor;
-
-  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
-  pokemonListDiv.classList.add("hidden");
+  if (!local) {
+    const pokemonListDiv = document.querySelector(
+      "#pokemon-list-" + pokemonName
+    );
+    pokemonListDiv.classList.add("hidden");
+  }
 }
 
 const currentGenerations = await loadGenerations(pokemonGenerationSelector);
 
-loadGenerationPokemon(
-  { name: "generation-i", url: GENERATION_URL + "/1" },
-  partyState,
-  pokemonListDiv,
-  createPokemonDiv,
-  applyDivEventListeners
-);
+async function init() {
+  await loadPokemonFromLocalStorage();
+
+  loadGenerationPokemon(
+    { name: "generation-i", url: GENERATION_URL + "/1" },
+    partyState,
+    pokemonListDiv,
+    createPokemonDiv,
+    applyDivEventListeners
+  );
+}
+init();

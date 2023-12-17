@@ -16,10 +16,34 @@ body {
 
 .search-bar-search-results-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   margin-top: 3rem;
   margin-bottom: 0rem;
+}
+
+.party-btns-search-results-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.save-btn-container {
+  margin: 1rem;
+}
+
+.save-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.edit-pokemon-button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.remove-pokemon-button:hover {
+  background-color: #ddd;
+  cursor: pointer;
 }
 
 .pokemon-move-preview {
@@ -163,7 +187,8 @@ body {
 
 .search-bar-container {
   display: flex;
-  height: 24rem;
+  align-items: left;
+  width: 100%;
 }
 
 .pokemon-party {
