@@ -29,12 +29,39 @@
       <button class="close-btn">Close</button>
     </div>
     <div class="generation-party-container">
-      <div class="generation-pokemon-container">
-        <select
-          name="pokemon-generation-selector"
-          class="pokemon-generation-selector"
-        ></select>
+      <div style="display: flex; flex-direction: column">
+        <div
+          class="party-btns-container"
+          style="display: flex; flex-direction: column; margin-top: 2rem"
+        >
+          <div class="save-btn-container">
+            <button class="save-btn">Save Party</button>
+          </div>
+          <div class="clear-save-btn-container">
+            <button
+              class="clear-btn"
+              style="width: 5rem; margin: 1rem; align-items: center"
+            >
+              Clear Saved Party
+            </button>
+          </div>
+          <div class="clear-party-btn-container">
+            <button
+              class="clear-party-btn"
+              style="width: 5rem; margin: 1rem; align-items: center"
+            >
+              Clear Party
+            </button>
+          </div>
+        </div>
+        <div class="generation-pokemon-container">
+          <select
+            name="pokemon-generation-selector"
+            class="pokemon-generation-selector"
+          ></select>
+        </div>
       </div>
+
       <div class="pokemon-party">
         <div class="pokemon-party-member"></div>
         <div class="pokemon-party-member"></div>
@@ -44,30 +71,7 @@
         <div class="pokemon-party-member"></div>
       </div>
     </div>
-    <div
-      class="party-btns-container"
-      style="display: flex; flex-direction: row; margin-top: 2rem"
-    >
-      <div class="save-btn-container">
-        <button class="save-btn">Save Party</button>
-      </div>
-      <div class="clear-save-btn-container">
-        <button
-          class="clear-btn"
-          style="width: 5rem; margin: 1rem; align-items: center"
-        >
-          Clear Saved Party
-        </button>
-      </div>
-      <div class="clear-party-btn-container">
-        <button
-          class="clear-party-btn"
-          style="width: 5rem; margin: 1rem; align-items: center"
-        >
-          Clear Party
-        </button>
-      </div>
-    </div>
+
     <div class="search-bar-search-results-container">
       <div class="search-bar-container">
         <div class="search-bar">
