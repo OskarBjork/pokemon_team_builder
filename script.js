@@ -51,6 +51,8 @@ const moveSearchBar = modalWindow.querySelector(".move-search-bar");
 const moveSearchInputField = moveSearchBar.querySelector("input");
 const pokemonPartyDiv = document.querySelector(".pokemon-party");
 const saveBtn = document.querySelector(".save-btn");
+const clearSaveBtn = document.querySelector(".clear-btn");
+const clearPartyBtn = document.querySelector(".clear-party-btn");
 
 // Event Listeners
 
@@ -61,6 +63,20 @@ pokemonSearchBar.addEventListener("input", searchAndLoadPokemon);
 moveSearchInputField.addEventListener("input", searchAndLoadMoves);
 
 saveBtn.addEventListener("click", savePokemonToLocalStorage);
+
+clearSaveBtn.addEventListener("click", function () {
+  localStorage.clear();
+});
+
+clearPartyBtn.addEventListener("click", function () {
+  partyState.pokemon.clear();
+  const pokemonPartyArray = Array.from(pokemonPartyDiv.children);
+  pokemonPartyArray.forEach(function (div) {
+    div.innerHTML = "";
+    div.style.borderStyle = null;
+    div.style.backgroundColor = "";
+  });
+});
 
 pokemonGenerationSelector.addEventListener("change", function () {
   let generation = null;

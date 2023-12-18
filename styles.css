@@ -18,7 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 3rem;
+  margin-top: 1rem;
   margin-bottom: 0rem;
 }
 
@@ -29,9 +29,21 @@ body {
 
 .save-btn-container {
   margin: 1rem;
+  width: 5rem;
+  height: 2rem;
 }
 
 .save-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.clear-party-btn:hover {
   background-color: #ddd;
   cursor: pointer;
 }
