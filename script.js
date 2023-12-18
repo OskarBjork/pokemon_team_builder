@@ -32,6 +32,7 @@ import {
 // TODO: Fixa overflow så att det visas fler pokemon i sökresultatet
 // TODO: Lägg till loading ikon
 // TODO: Gör om formen av bakgrunden till pokemon i partyt
+// TODO: Hitta på ett sätt att ta hand om väldigt långa namn i sökresultatet (de förstör layouten)
 
 // DOM ELEMENTS
 
@@ -277,6 +278,7 @@ function partyRemovePokemon(pokemonName) {
     if (pokemonDiv.id === pokemonName) {
       div.innerHTML = "";
       div.style.borderStyle = null;
+      div.style.borderColor = "";
       div.style.backgroundColor = "";
       const pokemonPreviewDiv = document.querySelector(
         "#pokemon-list-" + pokemonName

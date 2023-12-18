@@ -262,7 +262,7 @@ body {
   margin-top: 2rem;
   display: flex;
   flex-direction: row;
-  width: 4rem;
+  width: 6rem;
   height: 2rem;
   /* align-items: center; */
   justify-content: center;
@@ -328,6 +328,7 @@ body {
 .hovered {
   background-color: #ddd;
   cursor: pointer;
+  border: black 0.2rem solid;
 }
 .hidden {
   display: none;
