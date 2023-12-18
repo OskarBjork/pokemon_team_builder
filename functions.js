@@ -60,7 +60,10 @@ export function createPokemonDiv(pokemonData) {
     src="${pokemonData.sprites.front_default}"
     alt=""
   />
-  <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
+  <p class="pokemon-info" style="display:flex; align-items:center; margin-right:1rem;"> ${capitalizeFirstLetter(
+    pokemonData.name
+  )}</p>
+  
   ${getPokemonTypeIcons(pokemonData)}
   <div class="pokemon-info" >
   <img src="https://cdn-icons-png.flaticon.com/128/13207/13207019.png" alt="" />
@@ -87,7 +90,7 @@ export function createPokemonDiv(pokemonData) {
   <p class="pokemon-info-value">: ${pokemonData.stats[5].base_stat}</p>
   </div>
   <div class="pokemon-index" style="display:flex; flex-direction:row; align-items:center; margin:1rem">
-  <div>Index: </div>
+  <div style="margin-left:1rem">Index: </div>
   <div class="pokemon-index-value">${pokemonData.id}</div>
   </div>
 </div>`;
@@ -135,7 +138,7 @@ function getPokemonTypeIcons(pokemonData) {
   pokemonData.types.forEach(function (type) {
     pokemonTypeIcons.push(typeIcons[type.type.name]);
   });
-  let markup = `<div class="pokemon-info-types"> Type:`;
+  let markup = `<div class="pokemon-info"> <p style="display:flex; align-items: center">Type: </p>`;
 
   pokemonTypeIcons.forEach(function (icon) {
     markup += `<img src="${icon}" alt="" />`;
@@ -143,5 +146,9 @@ function getPokemonTypeIcons(pokemonData) {
 
   markup += `</div>`;
 
-  return markup;
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+
+  doc.body.firstChild.style.marginRight = "1rem";
+
+  return doc.body.firstChild.outerHTML;
 }

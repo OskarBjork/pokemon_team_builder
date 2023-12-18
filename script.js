@@ -53,6 +53,7 @@ const pokemonPartyDiv = document.querySelector(".pokemon-party");
 const saveBtn = document.querySelector(".save-btn");
 const clearSaveBtn = document.querySelector(".clear-btn");
 const clearPartyBtn = document.querySelector(".clear-party-btn");
+const loadingIcon = document.querySelector(".loading-icon");
 
 // Event Listeners
 
@@ -78,7 +79,8 @@ clearPartyBtn.addEventListener("click", function () {
   });
 });
 
-pokemonGenerationSelector.addEventListener("change", function () {
+pokemonGenerationSelector.addEventListener("change", async function () {
+  loadingIcon.classList.remove("hidden");
   let generation = null;
   for (const gen of currentGenerations) {
     if (
@@ -88,13 +90,14 @@ pokemonGenerationSelector.addEventListener("change", function () {
       break;
     }
   }
-  loadGenerationPokemon(
+  await loadGenerationPokemon(
     generation,
     partyState,
     pokemonListDiv,
     createPokemonDiv,
     applyDivEventListeners
   );
+  loadingIcon.classList.add("hidden");
 });
 
 // GLOBALS
@@ -133,7 +136,11 @@ async function searchAndLoadPokemon() {
   const generationPokemon = await getGenerationPokemon(
     partyState.currentGeneration
   );
-  pokemonListDiv.innerHTML = "";
+  let pokemonPreviews = pokemonListDiv.querySelectorAll(".pokemon-preview");
+
+  pokemonPreviews.forEach(function (pokemonPreview) {
+    pokemonListDiv.removeChild(pokemonPreview);
+  });
   generationPokemon.forEach(async function (pokemon) {
     if (
       pokemon.name.includes(searchString) &&
@@ -368,12 +375,14 @@ const currentGenerations = await loadGenerations(pokemonGenerationSelector);
 async function init() {
   await loadPokemonFromLocalStorage();
 
-  loadGenerationPokemon(
+  await loadGenerationPokemon(
     { name: "generation-i", url: GENERATION_URL + "/1" },
     partyState,
     pokemonListDiv,
     createPokemonDiv,
     applyDivEventListeners
   );
+  console.log("done");
+  loadingIcon.classList.add("hidden");
 }
 init();

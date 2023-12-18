@@ -106,7 +106,11 @@ export async function loadGenerationPokemon(
   applyDivEventListeners
 ) {
   partyState.currentGeneration = generation;
-  pokemonListDiv.innerHTML = "";
+  let pokemonPreviews = pokemonListDiv.querySelectorAll(".pokemon-preview");
+
+  pokemonPreviews.forEach(function (pokemonPreview) {
+    pokemonListDiv.removeChild(pokemonPreview);
+  });
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {});
   const pokemonDivs = pokemon.map(async function (pokemon) {
