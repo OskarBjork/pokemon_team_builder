@@ -75,6 +75,7 @@ clearPartyBtn.addEventListener("click", function () {
   pokemonPartyArray.forEach(function (div) {
     div.innerHTML = "";
     div.style.borderStyle = null;
+    div.style.borderColor = "";
     div.style.backgroundColor = "";
   });
 });
