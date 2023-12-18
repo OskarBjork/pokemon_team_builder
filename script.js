@@ -45,7 +45,7 @@ const pokemonSearchBar = document.querySelector(".search-bar");
 const searchInputField = pokemonSearchBar.querySelector("input");
 
 const closeModalButton = modalWindow.querySelector(".close-btn");
-const pokemonStatDiv = modalWindow.querySelector(".pokemon-stats");
+const pokemonDataDiv = modalWindow.querySelector(".pokemon-data");
 const editList = modalWindow.querySelector(".pokemon-edit-list");
 const currentPokemonMoves = modalWindow.querySelector(".pokemon-moves");
 const moveSearchBar = modalWindow.querySelector(".move-search-bar");
@@ -182,20 +182,45 @@ function applyDivEventListeners(div, pokemonName) {
   });
 }
 
-function openModal(modal, statDiv, pokemon) {
+function openModal(modal, pokemonDataDiv, pokemon) {
   partyState.currentSelectedPokemon = pokemon;
   modal.style.display = "block";
-  statDiv.innerHTML = "";
+  const pokemonCard = pokemonDataDiv.querySelector(".pokemon-card");
+  pokemonCard.innerHTML = "";
   const markup = `
-  <p class="pokemon-info">${capitalizeFirstLetter(pokemon.data.name)}</p>
-        <p class="pokemon-info">HP: ${pokemon.data.stats[0].base_stat}</p>
-        <p class="pokemon-info">ATK: ${pokemon.data.stats[1].base_stat}</p>
-        <p class="pokemon-info">DEF: ${pokemon.data.stats[2].base_stat}</p>
-        <p class="pokemon-info">S.ATK: ${pokemon.data.stats[3].base_stat}</p>
-        <p class="pokemon-info">S.DEF: ${pokemon.data.stats[4].base_stat}</p>
-        <p class="pokemon-info">SPEED: ${pokemon.data.stats[5].base_stat}</p>
+  <div class="pokemon" id ="${pokemon.name}">
+  <img class="pokemon-sprite" src="${pokemon.spriteUrl}" alt="" />
+  <div>${capitalizeFirstLetter(pokemon.name)}&nbsp; </div>
+  </div>
+  <div class="pokemon-info-modal" >
+  <img class="modal-stat-image" src="https://cdn-icons-png.flaticon.com/128/13207/13207019.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[0].base_stat}</p>
+  </div>
+  <div class="pokemon-info-modal">
+  <img class="modal-stat-image" src="https://cdn-icons-png.flaticon.com/128/1408/1408937.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[1].base_stat}</p>
+  </div>
+  <div class="pokemon-info-modal">
+  <img class="modal-stat-image" src="https://cdn-icons-png.flaticon.com/128/3288/3288844.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[2].base_stat}</p>
+  </div>
+  <div class="pokemon-info-modal">
+  <img class="modal-stat-image" src="https://cdn-icons-png.flaticon.com/128/9742/9742560.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[3].base_stat}</p>
+  </div>
+  <div class="pokemon-info-modal">
+  <img class="modal-stat-image" src="https://cdn-icons-png.flaticon.com/128/5906/5906032.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[4].base_stat}</p>
+  </div>
+  <div class="pokemon-info-modal">
+  <img class="modal-stat-image"  src="https://cdn-icons-png.flaticon.com/128/9717/9717736.png" alt="" />
+  <p class="pokemon-info-value">: ${pokemon.data.stats[5].base_stat}</p>
+  </div>
+  </div>
   `;
-  statDiv.innerHTML = markup;
+  console.log(pokemonDataDiv);
+  pokemonCard.innerHTML = markup;
+  pokemonCard.style.backgroundColor = pokemon.color;
   updateMoveList();
   loadPokemonMoves(pokemon, editList, addMoveEventListeners, createMoveDiv);
 }
@@ -352,7 +377,7 @@ async function partyAddPokemon(pokemonName, local = false) {
     .querySelector(".edit-pokemon-button")
     .addEventListener(
       "click",
-      openModal.bind(null, modalWindow, pokemonStatDiv, pokemon)
+      openModal.bind(null, modalWindow, pokemonDataDiv, pokemon)
     );
   availableDiv
     .querySelector(".remove-pokemon-button")

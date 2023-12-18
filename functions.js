@@ -23,8 +23,8 @@ export function createMoveDiv(moveData) {
   <p class="move-info">Pow: ${power}</p>
   <p class="move-info">PP: ${moveData.pp}</p>
   <p class="move-info">Priority: ${moveData.priority}</p>
-  <p class="move-info-desc">Desc: ${getMoveDesc(moveData)}</p>
   </div>`;
+  // <p class="move-info-desc">Desc: ${getMoveDesc(moveData)}</p>
   const doc = new DOMParser().parseFromString(markup, "text/html");
 
   return doc.body.firstChild;
