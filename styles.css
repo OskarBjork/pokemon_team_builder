@@ -172,7 +172,10 @@ body {
 .pokemon-moves {
   display: flex;
   flex-direction: row;
+  align-items: center;
   height: 5rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pokemon-data {

@@ -33,7 +33,7 @@ import {
 // TODO: Lägg till loading ikon
 // TODO: Gör om formen av bakgrunden till pokemon i partyt
 // TODO: Hitta på ett sätt att ta hand om väldigt långa namn i sökresultatet (de förstör layouten)
-
+// TODO: Gör så att hovered bakgrundsfärgen är distinkt från bakgrundsfärgen på sökresultatet
 // DOM ELEMENTS
 
 const pokemonGenerationSelector = document.querySelector(
