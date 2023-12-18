@@ -131,8 +131,8 @@ export async function loadGenerationPokemon(
     );
   });
   newDivs.sort(function (a, b) {
-    const aIndex = a.value.querySelector(".pokemon-index-p").textContent;
-    const bIndex = b.value.querySelector(".pokemon-index-p").textContent;
+    const aIndex = a.value.querySelector(".pokemon-index-value").textContent;
+    const bIndex = b.value.querySelector(".pokemon-index-value").textContent;
     return aIndex - bIndex;
   });
   newDivs.forEach(function (pokemonPromise) {
