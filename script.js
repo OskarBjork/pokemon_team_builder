@@ -123,7 +123,7 @@ function addMoveEventListeners(moveDiv, moveData) {
       return;
     }
     partyState.currentSelectedPokemon.moves.push(moveData);
-    // updateMoveList();
+    updateMoveList();
     moveDiv.classList.add("hidden");
   });
 }
@@ -149,7 +149,7 @@ async function searchAndLoadPokemon() {
 
 async function searchAndLoadMoves() {
   const searchString = moveSearchInputField.value.toLowerCase();
-  const pokemonMoves = await partyState.currentSelectedPokemon.getMoves();
+  const pokemonMoves = await partyState.currentSelectedPokemon.availableMoves;
   editList.innerHTML = "";
   pokemonMoves.forEach(async function (move) {
     if (move.move.name.includes(searchString)) {
@@ -219,19 +219,17 @@ function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
     let currentMove = partyState.currentSelectedPokemon.moves[i];
-    console.log(partyState.currentSelectedPokemon);
     let moveName;
     if (currentMove === undefined) {
       moveName = "Empty move slot";
     } else {
-      moveName = currentMove.move.name;
+      moveName = currentMove.name;
     }
     const p = document.createElement("p");
     p.className = "pokemon-move";
     p.textContent = capitalizeFirstLetter(moveName);
     p.addEventListener("click", removeMove.bind(null, moveName));
     currentPokemonMoves.appendChild(p);
-    console.log("lol du är en noob tycker vi alla oskar hahaha");
   }
 }
 
