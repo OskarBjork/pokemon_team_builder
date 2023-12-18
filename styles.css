@@ -96,9 +96,9 @@ body {
   margin: 1rem;
   width: 9rem;
   /* align-items: center; */
-  height: 9rem;
+  height: 13rem;
   background-color: rgba(74, 76, 79, 0.5);
-  border-radius: 50%;
+  border-radius: 10px;
 }
 
 .pokemon-edit-modal-window {
@@ -172,7 +172,7 @@ body {
   border: none;
   width: 2rem;
   height: 2rem;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
 }
 
 .pokemon-game-box {
@@ -224,6 +224,11 @@ body {
 .pokemon-btns {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  width: auto;
+  margin: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .pokemon {
@@ -252,14 +257,34 @@ body {
   margin-left: 2rem;
   margin-top: 2rem;
   display: flex;
+  flex-direction: row;
   width: 4rem;
   height: 2rem;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.pokemon-info-value {
+  display: flex;
+  align-items: center;
+  /* width: 4rem; */
+  /* height: 3; */
+}
+
+.pokemon-index {
+  display: flex;
 }
 
 .move-info {
   width: 2rem;
   height: 2rem;
   margin-left: 3rem;
+}
+.party-btn {
+  transition: background-color 0.1 ease;
+}
+.party-btn:active {
+  background-color: #3e8e41;
 }
 
 .move-info-desc {

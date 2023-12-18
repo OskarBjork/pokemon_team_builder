@@ -53,6 +53,7 @@ export function createPokemonDiv(pokemonData) {
   });
   const pokemonColor = typeColors[pokemonData.types[0].type.name];
   const markup = `<div id="pokemon-list-${
+    // TODO: Vi hade kunnat loopa igenom alla base stats och skapa markup för dem enklare
     pokemonData.name
   }" class="pokemon-preview" style="--bg-color: ${pokemonColor}">
   <img
@@ -61,24 +62,30 @@ export function createPokemonDiv(pokemonData) {
   />
   <p class="pokemon-info"> ${capitalizeFirstLetter(pokemonData.name)}</p>
   ${getPokemonTypeIcons(pokemonData)}
-  <div class="pokemon-info">
+  <div class="pokemon-info" >
   <img src="https://cdn-icons-png.flaticon.com/128/13207/13207019.png" alt="" />
-  : ${pokemonData.stats[0].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[0].base_stat}</p>
+  </div>
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/1408/1408937.png" alt="" />
-  : ${pokemonData.stats[1].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[1].base_stat}</p>
+  </div>
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/3288/3288844.png" alt="" />
-  : ${pokemonData.stats[2].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[2].base_stat}</p>
+  </div>
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/9742/9742560.png" alt="" />
-  : ${pokemonData.stats[3].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[3].base_stat}</p>
+  </div>
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/5906/5906032.png" alt="" />
-  : ${pokemonData.stats[4].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[4].base_stat}</p>
+  </div>
   <div class="pokemon-info">
   <img src="https://cdn-icons-png.flaticon.com/128/9717/9717736.png" alt="" />
-  : ${pokemonData.stats[5].base_stat}</div>
+  <p class="pokemon-info-value">: ${pokemonData.stats[5].base_stat}</p>
+  </div>
   <div class="pokemon-index">
   Index: 
   <p class="pokemon-index-p">${pokemonData.id}</p>

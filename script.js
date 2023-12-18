@@ -316,7 +316,7 @@ async function partyAddPokemon(pokemonName, local = false) {
   const markup = `
   <div class="pokemon" id ="${pokemonName}">
   <img class="pokemon-sprite" src="${pokemon.spriteUrl}" alt="" />
-  <p>${capitalizeFirstLetter(pokemon.name)}</p>
+  <div>${capitalizeFirstLetter(pokemon.name)}&nbsp; </div>
   </div>
   <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
