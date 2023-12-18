@@ -26,12 +26,12 @@ import {
 
 // TODO: Organisera pokemon efter type?
 // TODO: Fixa hover klassen på pokemon-preview
-// TODO: Fixa ordningen av pokemon i sökresultatet
-// TODO: Fixa så att partyt fylls upp när en pokemon tas bort
 // TODO: Fixa hela move UI:n
 // TODO: Nytt typsnitt till pokemon namn
 // TODO: Fixa API calls för pokemon som har flera former
 // TODO: Fixa overflow så att det visas fler pokemon i sökresultatet
+// TODO: Lägg till loading ikon
+// TODO: Gör om formen av bakgrunden till pokemon i partyt
 
 // DOM ELEMENTS
 
@@ -123,7 +123,7 @@ function addMoveEventListeners(moveDiv, moveData) {
       return;
     }
     partyState.currentSelectedPokemon.moves.push(moveData);
-    updateMoveList();
+    // updateMoveList();
     moveDiv.classList.add("hidden");
   });
 }
@@ -203,6 +203,7 @@ function removeMove(moveName) {
     return;
   }
   const currentMoves = partyState.currentSelectedPokemon.moves;
+  console.log(currentMoves);
   for (let i = 0; i < currentMoves.length; ++i) {
     if (currentMoves[i].name == moveName) {
       currentMoves.splice(i, 1);
@@ -218,8 +219,9 @@ function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
     let currentMove = partyState.currentSelectedPokemon.moves[i];
+    console.log(partyState.currentSelectedPokemon);
     let moveName;
-    if (currentMove == undefined) {
+    if (currentMove === undefined) {
       moveName = "Empty move slot";
     } else {
       moveName = currentMove.move.name;
@@ -229,6 +231,7 @@ function updateMoveList() {
     p.textContent = capitalizeFirstLetter(moveName);
     p.addEventListener("click", removeMove.bind(null, moveName));
     currentPokemonMoves.appendChild(p);
+    console.log("lol du är en noob tycker vi alla oskar hahaha");
   }
 }
 

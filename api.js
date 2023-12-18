@@ -89,7 +89,7 @@ export async function loadPokemonMoves(
   createMoveDiv
 ) {
   container.innerHTML = "";
-  const moves = pokemon.moves;
+  const moves = pokemon.availableMoves;
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
@@ -158,6 +158,7 @@ export async function pokemonIsMythical(pokemonData) {
 
 export class Pokemon {
   #data;
+  moves = [];
 
   constructor(pokemonData) {
     this.#data = pokemonData;
@@ -179,7 +180,7 @@ export class Pokemon {
     return this.#data;
   }
 
-  get moves() {
+  get availableMoves() {
     return this.data.moves;
   }
 
