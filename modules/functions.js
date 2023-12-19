@@ -18,16 +18,24 @@ export function createMoveDiv(moveData) {
     moveData.name
   }" class="pokemon-move-preview">
   <p class="move-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <p class="move-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
+  <!--<p class="move-info">Type: ${capitalizeFirstLetter(
+    moveData.type.name
+  )}</p>-->
+  <!--<p class="move-info">Type: <img src="${
+    typeIcons[moveData.type.name]
+  }" class=""/></p>-->
+  ${getMoveTypeIcons(moveData)}
   <p class="move-info">Acc: ${accuracy}</p>
   <p class="move-info">Pow: ${power}</p>
   <p class="move-info">PP: ${moveData.pp}</p>
   <p class="move-info">Priority: ${moveData.priority}</p>
   </div>`;
-  // <p class="move-info-desc">Desc: ${getMoveDesc(moveData)}</p>
-  const doc = new DOMParser().parseFromString(markup, "text/html");
 
-  return doc.body.firstChild;
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+  const moveDiv = doc.body.firstChild;
+  moveDiv.style.backgroundColor = typeColors[moveData.type.name];
+
+  return moveDiv;
 }
 
 export function capitalizeFirstLetter(string) {
@@ -118,13 +126,34 @@ function getPokemonTypeIcons(pokemonData) {
   pokemonData.types.forEach(function (type) {
     pokemonTypeIcons.push(typeIcons[type.type.name]);
   });
-  let markup = `<div class="pokemon-info"> <p style="display:flex; align-items: center">Type: </p>`;
 
-  pokemonTypeIcons.forEach(function (icon) {
-    markup += `<img src="${icon}" alt="" />`;
-  });
+  let createTypeImages = () => {
+    let icons = "";
+    pokemonTypeIcons.forEach((icon) => {
+      icons += `<img src=${icon} alt="" />`;
+    });
+    return icons;
+  };
 
-  markup += `</div>`;
+  const markup = `
+  <div class="pokemon-info">
+  <p style="display:flex; align-items: center">Type: </p>
+  ${createTypeImages()}
+  </div>`;
+
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+
+  doc.body.firstChild.style.marginRight = "1rem";
+
+  return doc.body.firstChild.outerHTML;
+}
+
+function getMoveTypeIcons(moveData) {
+  const markup = `
+  <div class="pokemon-info">
+  <p style="display:flex; align-items: center">Type: </p>
+  <img src="${typeIcons[moveData.type.name]}" alt="" />
+  </div>`;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
 

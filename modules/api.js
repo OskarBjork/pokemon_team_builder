@@ -93,7 +93,6 @@ export async function loadPokemonMoves(
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
-    moveDiv.style.backgroundColor = typeColors[moveData.type.name];
     wrapper(moveDiv, moveData);
     container.appendChild(moveDiv);
   });
@@ -215,7 +214,7 @@ export class LegendaryPokemon extends Pokemon {
 
   // TODO: Kom på bättre namn
   get descriptiveText() {
-    return "<br>(Legendary)"
+    return "<br>(Legendary)";
   }
 }
 
@@ -234,7 +233,7 @@ export class MythicalPokemon extends Pokemon {
 
   // TODO: Kom på bättre namn
   get descriptiveText() {
-    return "<br>(Mythical)"
+    return "<br>(Mythical)";
   }
 }
 

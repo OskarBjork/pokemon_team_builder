@@ -1,9 +1,9 @@
-import { typeColors } from "./config.js";
+import { typeColors } from "./modules/config.js";
 import {
   createMoveDiv,
   capitalizeFirstLetter,
   createPokemonDiv,
-} from "./functions.js";
+} from "./modules/functions.js";
 import {
   GENERATION_URL,
   POKEMON_URL,
@@ -20,7 +20,7 @@ import {
   checkIfPokemonIsInParty,
   pokemonIsLegendary,
   pokemonIsMythical,
-} from "./api.js";
+} from "./modules/api.js";
 
 // TODO: Organisera pokemon efter type?
 // TODO: Fixa hover klassen på pokemon-preview
@@ -168,7 +168,6 @@ async function searchAndLoadMoves() {
     if (move.move.name.includes(searchString)) {
       const moveData = await getMoveData(move);
       const moveDiv = createMoveDiv(moveData);
-      moveDiv.style.backgroundColor = typeColors[moveData.type.name];
       addMoveEventListeners(moveDiv, moveData);
       editList.appendChild(moveDiv);
     }
