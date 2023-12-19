@@ -113,26 +113,6 @@ export function getEvolutionChainUrl(pokemonName) {
   return url;
 }
 
-export function getEvolutions(pokemonName) {
-  const url = getEvolutionChainUrl(pokemonName);
-
-  let evolutionStrings = [];
-  fetch(`${url}`)
-    .then((response) => response.json())
-    .then((evolution) => {
-      // Första evolutionen:
-      evolutionStrings.push(evolution.chain.species.name);
-      // De andra evolutionerna:
-      evolutionStrings.push(evolution.chain.evolves_to[0].species.name);
-      /*
-      evolutionStrings.push(
-        evolution.chain.evolves_to[0].evolves_to[0].species.name
-      );
-      */
-    });
-  return evolutionStrings;
-}
-
 function getPokemonTypeIcons(pokemonData) {
   let pokemonTypeIcons = [];
   pokemonData.types.forEach(function (type) {

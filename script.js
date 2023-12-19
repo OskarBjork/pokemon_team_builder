@@ -22,8 +22,6 @@ import {
   pokemonIsMythical,
 } from "./api.js";
 
-// import { getGenerations } from "./functions.js";
-
 // TODO: Organisera pokemon efter type?
 // TODO: Fixa hover klassen på pokemon-preview
 // TODO: Fixa hela move UI:n
@@ -34,6 +32,7 @@ import {
 // TODO: Gör om formen av bakgrunden till pokemon i partyt
 // TODO: Hitta på ett sätt att ta hand om väldigt långa namn i sökresultatet (de förstör layouten)
 // TODO: Gör så att hovered bakgrundsfärgen är distinkt från bakgrundsfärgen på sökresultatet
+
 // DOM ELEMENTS
 
 const pokemonGenerationSelector = document.querySelector(
@@ -127,6 +126,11 @@ function addMoveEventListeners(moveDiv, moveData) {
     if (partyState.currentSelectedPokemon.moves.includes(moveData)) {
       return;
     }
+
+    if (partyState.currentSelectedPokemon.moves.length >= 4) {
+      return;
+    }
+
     partyState.currentSelectedPokemon.moves.push(moveData);
     updateMoveList();
     moveDiv.classList.add("hidden");
@@ -222,6 +226,7 @@ function openModal(modal, pokemonDataDiv, pokemon) {
   `;
   pokemonCard.innerHTML = markup;
   pokemonCard.style.backgroundColor = pokemon.color;
+  pokemonCard.style.borderColor = pokemon.borderColor;
   updateMoveList();
   loadPokemonMoves(pokemon, editList, addMoveEventListeners, createMoveDiv);
 }
@@ -254,17 +259,48 @@ function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
     let currentMove = partyState.currentSelectedPokemon.moves[i];
-    let moveName;
+    let moveName =
+      currentMove === undefined ? "Empty move slot" : currentMove.name;
+    /*
     if (currentMove === undefined) {
       moveName = "Empty move slot";
     } else {
       moveName = currentMove.name;
     }
-    const p = document.createElement("p");
+    */
+    /*const markup = `
+    <p class="pokemon-move">${capitalizeFirstLetter(moveName)}</p>`;
+    */
+   /*
+    const markup = `
+    <div class="pokemon-move">${capitalizeFirstLetter(
+      moveName
+    )}</div>
+    <div class="pokemon-btns">
+    <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
+    </div>
+    </div>
+    `;
+    */
+    const div = document.createElement("div");
+    div.className = "pokemon-move";
+    div.textContent = capitalizeFirstLetter(moveName);
+
+    const img = document.createElement("img");
+    img.src = "https://cdn-icons-png.flaticon.com/512/1214/1214428.png";
+    img.className = "remove-move-button";
+    img.addEventListener("click", removeMove.bind(null, moveName));
+    div.appendChild(img)
+    /*const p = document.createElement("p");
     p.className = "pokemon-move";
     p.textContent = capitalizeFirstLetter(moveName);
-    p.addEventListener("click", removeMove.bind(null, moveName));
-    currentPokemonMoves.appendChild(p);
+    */
+    /*document
+      .getElementById(`pokemon-move-${moveName}`)
+      .addEventListener("click", removeMove.bind(null, moveName));
+    */
+    //currentPokemonMoves.appendChild(p);
+    currentPokemonMoves.appendChild(div);
   }
 }
 
