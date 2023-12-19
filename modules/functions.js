@@ -18,12 +18,6 @@ export function createMoveDiv(moveData) {
     moveData.name
   }" class="pokemon-move-preview">
   <p class="move-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <!--<p class="move-info">Type: ${capitalizeFirstLetter(
-    moveData.type.name
-  )}</p>-->
-  <!--<p class="move-info">Type: <img src="${
-    typeIcons[moveData.type.name]
-  }" class=""/></p>-->
   ${getMoveTypeIcons(moveData)}
   <p class="move-info">Acc: ${accuracy}</p>
   <p class="move-info">Pow: ${power}</p>
@@ -150,7 +144,7 @@ function getPokemonTypeIcons(pokemonData) {
 
 function getMoveTypeIcons(moveData) {
   const markup = `
-  <div class="pokemon-info">
+  <div class="move-info">
   <p style="display:flex; align-items: center">Type: </p>
   <img src="${typeIcons[moveData.type.name]}" alt="" />
   </div>`;

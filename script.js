@@ -1,4 +1,4 @@
-import { typeColors } from "./modules/config.js";
+import { typeColors, typeIcons } from "./modules/config.js";
 import {
   createMoveDiv,
   capitalizeFirstLetter,
@@ -272,12 +272,17 @@ function updateMoveList() {
 
       const buttonsDiv = document.createElement("div");
 
+      const typeImg = document.createElement("img");
+      typeImg.src = typeIcons[currentMove.type.name];
+      typeImg.className = "move-type-button";
+
       const removeMoveImg = document.createElement("img");
       removeMoveImg.src =
         "https://cdn-icons-png.flaticon.com/512/1214/1214428.png";
       removeMoveImg.className = "remove-move-button";
       removeMoveImg.addEventListener("click", removeMove.bind(null, moveName));
 
+      buttonsDiv.append(typeImg);
       buttonsDiv.append(removeMoveImg);
       moveDiv.appendChild(buttonsDiv);
     }
