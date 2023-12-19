@@ -1,33 +1,25 @@
 import { typeColors, typeIcons } from "./config.js";
 
 export function createMoveDiv(moveData) {
-  let accuracy = "";
-  if (moveData.accuracy == null) {
-    accuracy = "Status";
-  } else {
-    accuracy = moveData.accuracy;
-  }
-  let power = "";
-  if (moveData.power == null) {
-    power = "Status";
-  } else {
-    power = moveData.power;
-  }
+  const accuracy = moveData.accuracy !== null ? moveData.accuracy : "Status";
+  const power = moveData.power !== null ? moveData.power : "Status";
 
   const markup = `<div id="pokemon-move-${
     moveData.name
   }" class="pokemon-move-preview">
   <p class="move-info"> ${capitalizeFirstLetter(moveData.name)}:</p>
-  <p class="move-info">Type: ${capitalizeFirstLetter(moveData.type.name)}</p>
+  ${getMoveTypeIcons(moveData)}
   <p class="move-info">Acc: ${accuracy}</p>
   <p class="move-info">Pow: ${power}</p>
   <p class="move-info">PP: ${moveData.pp}</p>
   <p class="move-info">Priority: ${moveData.priority}</p>
   </div>`;
-  // <p class="move-info-desc">Desc: ${getMoveDesc(moveData)}</p>
-  const doc = new DOMParser().parseFromString(markup, "text/html");
 
-  return doc.body.firstChild;
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+  const moveDiv = doc.body.firstChild;
+  moveDiv.style.backgroundColor = typeColors[moveData.type.name];
+
+  return moveDiv;
 }
 
 export function capitalizeFirstLetter(string) {
@@ -113,38 +105,39 @@ export function getEvolutionChainUrl(pokemonName) {
   return url;
 }
 
-export function getEvolutions(pokemonName) {
-  const url = getEvolutionChainUrl(pokemonName);
-
-  let evolutionStrings = [];
-  fetch(`${url}`)
-    .then((response) => response.json())
-    .then((evolution) => {
-      // Första evolutionen:
-      evolutionStrings.push(evolution.chain.species.name);
-      // De andra evolutionerna:
-      evolutionStrings.push(evolution.chain.evolves_to[0].species.name);
-      /*
-      evolutionStrings.push(
-        evolution.chain.evolves_to[0].evolves_to[0].species.name
-      );
-      */
-    });
-  return evolutionStrings;
-}
-
 function getPokemonTypeIcons(pokemonData) {
   let pokemonTypeIcons = [];
   pokemonData.types.forEach(function (type) {
     pokemonTypeIcons.push(typeIcons[type.type.name]);
   });
-  let markup = `<div class="pokemon-info"> <p style="display:flex; align-items: center">Type: </p>`;
 
-  pokemonTypeIcons.forEach(function (icon) {
-    markup += `<img src="${icon}" alt="" />`;
-  });
+  let createTypeImages = () => {
+    let icons = "";
+    pokemonTypeIcons.forEach((icon) => {
+      icons += `<img src=${icon} alt="" />`;
+    });
+    return icons;
+  };
 
-  markup += `</div>`;
+  const markup = `
+  <div class="pokemon-info">
+  <p style="display:flex; align-items: center">Type: </p>
+  ${createTypeImages()}
+  </div>`;
+
+  const doc = new DOMParser().parseFromString(markup, "text/html");
+
+  doc.body.firstChild.style.marginRight = "1rem";
+
+  return doc.body.firstChild.outerHTML;
+}
+
+function getMoveTypeIcons(moveData) {
+  const markup = `
+  <div class="move-info">
+  <p style="display:flex; align-items: center">Type: </p>
+  <img src="${typeIcons[moveData.type.name]}" alt="" />
+  </div>`;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
 

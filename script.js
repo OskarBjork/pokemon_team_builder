@@ -1,9 +1,9 @@
-import { typeColors } from "./config.js";
+import { typeColors, typeIcons } from "./modules/config.js";
 import {
   createMoveDiv,
   capitalizeFirstLetter,
   createPokemonDiv,
-} from "./functions.js";
+} from "./modules/functions.js";
 import {
   GENERATION_URL,
   POKEMON_URL,
@@ -20,9 +20,7 @@ import {
   checkIfPokemonIsInParty,
   pokemonIsLegendary,
   pokemonIsMythical,
-} from "./api.js";
-
-// import { getGenerations } from "./functions.js";
+} from "./modules/api.js";
 
 // TODO: Organisera pokemon efter type?
 // TODO: Fixa hover klassen på pokemon-preview
@@ -34,6 +32,7 @@ import {
 // TODO: Gör om formen av bakgrunden till pokemon i partyt
 // TODO: Hitta på ett sätt att ta hand om väldigt långa namn i sökresultatet (de förstör layouten)
 // TODO: Gör så att hovered bakgrundsfärgen är distinkt från bakgrundsfärgen på sökresultatet
+
 // DOM ELEMENTS
 
 const pokemonGenerationSelector = document.querySelector(
@@ -127,6 +126,11 @@ function addMoveEventListeners(moveDiv, moveData) {
     if (partyState.currentSelectedPokemon.moves.includes(moveData)) {
       return;
     }
+
+    if (partyState.currentSelectedPokemon.moves.length >= 4) {
+      return;
+    }
+
     partyState.currentSelectedPokemon.moves.push(moveData);
     updateMoveList();
     moveDiv.classList.add("hidden");
@@ -163,7 +167,7 @@ async function searchAndLoadMoves() {
   pokemonMoves.forEach(async function (move) {
     if (move.move.name.includes(searchString)) {
       const moveData = await getMoveData(move);
-      let moveDiv = createMoveDiv(moveData);
+      const moveDiv = createMoveDiv(moveData);
       addMoveEventListeners(moveDiv, moveData);
       editList.appendChild(moveDiv);
     }
@@ -222,6 +226,7 @@ function openModal(modal, pokemonDataDiv, pokemon) {
   `;
   pokemonCard.innerHTML = markup;
   pokemonCard.style.backgroundColor = pokemon.color;
+  pokemonCard.style.borderColor = pokemon.borderColor;
   updateMoveList();
   loadPokemonMoves(pokemon, editList, addMoveEventListeners, createMoveDiv);
 }
@@ -253,18 +258,48 @@ function removeMove(moveName) {
 function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
-    let currentMove = partyState.currentSelectedPokemon.moves[i];
-    let moveName;
-    if (currentMove === undefined) {
-      moveName = "Empty move slot";
-    } else {
-      moveName = currentMove.name;
+    const currentMove = partyState.currentSelectedPokemon.moves[i];
+
+    const moveName =
+      currentMove !== undefined ? currentMove.name : "Empty move slot";
+
+    const moveDiv = document.createElement("div");
+    moveDiv.className = "pokemon-move";
+    moveDiv.textContent = capitalizeFirstLetter(moveName);
+
+    if (currentMove !== undefined) {
+      moveDiv.style.backgroundColor = typeColors[currentMove.type.name];
+
+      const textDiv = document.createElement("div");
+
+      const accuracy =
+        currentMove.accuracy !== null ? currentMove.accuracy : "Status";
+
+      const power = currentMove.power !== null ? currentMove.power : "Status";
+
+      textDiv.textContent = `Pow: ${power}, Acc: ${accuracy}`;
+      textDiv.style.marginTop = "0.5rem";
+
+      const buttonsDiv = document.createElement("div");
+
+      const typeImg = document.createElement("img");
+      typeImg.src = typeIcons[currentMove.type.name];
+      typeImg.className = "move-type-button";
+
+      const removeMoveImg = document.createElement("img");
+      removeMoveImg.src =
+        "https://cdn-icons-png.flaticon.com/512/1214/1214428.png";
+      removeMoveImg.className = "remove-move-button";
+      removeMoveImg.addEventListener("click", removeMove.bind(null, moveName));
+
+      buttonsDiv.append(typeImg);
+      buttonsDiv.append(removeMoveImg);
+
+      moveDiv.appendChild(textDiv);
+      moveDiv.appendChild(buttonsDiv);
     }
-    const p = document.createElement("p");
-    p.className = "pokemon-move";
-    p.textContent = capitalizeFirstLetter(moveName);
-    p.addEventListener("click", removeMove.bind(null, moveName));
-    currentPokemonMoves.appendChild(p);
+
+    currentPokemonMoves.appendChild(moveDiv);
   }
 }
 
