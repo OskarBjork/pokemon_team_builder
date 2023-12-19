@@ -67,6 +67,7 @@ body {
 .pokemon-move-preview {
   display: flex;
   flex-direction: row;
+  border: 0.2rem solid whitesmoke;
 }
 
 .generation-pokemon-container {
@@ -145,15 +146,17 @@ body {
   top: 0;
   right: 0;
   padding: 0.5rem;
-  background-color: #04aa6d;
+  background-color: red;
   color: white;
   border: none;
   font-size: 1rem;
   width: 5rem;
   height: 2rem;
+  border-radius: 10px;
 }
 
 .close-btn:hover {
+  background-color: #ddd;
   cursor: pointer;
 }
 
