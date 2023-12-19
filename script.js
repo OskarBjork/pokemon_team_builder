@@ -22,16 +22,9 @@ import {
   pokemonIsMythical,
 } from "./modules/api.js";
 
-// TODO: Organisera pokemon efter type?
-// TODO: Fixa hover klassen på pokemon-preview
-// TODO: Fixa hela move UI:n
-// TODO: Nytt typsnitt till pokemon namn
-// TODO: Fixa API calls för pokemon som har flera former
-// TODO: Fixa overflow så att det visas fler pokemon i sökresultatet
-// TODO: Lägg till loading ikon
-// TODO: Gör om formen av bakgrunden till pokemon i partyt
-// TODO: Hitta på ett sätt att ta hand om väldigt långa namn i sökresultatet (de förstör layouten)
-// TODO: Gör så att hovered bakgrundsfärgen är distinkt från bakgrundsfärgen på sökresultatet
+// TODO: Fixa API calls för pokemon som har flera former (Kommer inte kunna)
+// TODO: Hitta på ett sätt att ta hand om pokemon med flera typer i sökresultatet (de förstör layouten)
+// TODO: Lägg till en knapp för att ladda pokemon från local storage
 
 // DOM ELEMENTS
 

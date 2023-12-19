@@ -67,7 +67,7 @@ body {
 .pokemon-move-preview {
   display: flex;
   flex-direction: row;
-  border: 0.2rem solid whitesmoke;
+  border: 1px solid whitesmoke;
 }
 
 .generation-pokemon-container {
@@ -77,7 +77,7 @@ body {
 
 .pokemon-edit-list {
   margin-left: 3rem;
-  display: grid;
+  display: flex;
   flex-direction: column;
   /* overflow: visible; */
   overflow-y: visible;
@@ -237,7 +237,7 @@ body {
   margin-left: 1rem;
   overflow: auto;
   margin-top: 1rem;
-  background-color: #ddd;
+  background-color: #cce7ff;
 }
 
 .search-bar-container {
