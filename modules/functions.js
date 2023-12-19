@@ -1,18 +1,8 @@
 import { typeColors, typeIcons } from "./config.js";
 
 export function createMoveDiv(moveData) {
-  let accuracy = "";
-  if (moveData.accuracy == null) {
-    accuracy = "Status";
-  } else {
-    accuracy = moveData.accuracy;
-  }
-  let power = "";
-  if (moveData.power == null) {
-    power = "Status";
-  } else {
-    power = moveData.power;
-  }
+  const accuracy = moveData.accuracy !== null ? moveData.accuracy : "Status";
+  const power = moveData.power !== null ? moveData.power : "Status";
 
   const markup = `<div id="pokemon-move-${
     moveData.name

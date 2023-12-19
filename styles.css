@@ -82,7 +82,7 @@ body {
   overflow-y: visible;
   overflow-x: hidden;
   height: 20rem;
-  width: 50rem;
+  width: 55rem;
   border: black 0.2rem solid;
 }
 
@@ -152,6 +152,10 @@ body {
   height: 2rem;
 }
 
+.close-btn:hover {
+  cursor: pointer;
+}
+
 .search-bar {
   margin-top: 0rem;
 }
@@ -169,8 +173,8 @@ body {
   flex-direction: column;
   margin: 1rem;
   padding: 1rem;
-  width: 8rem;
-  height: 5rem;
+  width: 11rem;
+  height:6rem;
   border-style: solid;
   border-radius: 10px;
   border-color: rgba(74, 76, 79, 0.5);
@@ -319,12 +323,16 @@ body {
   /* height: 3; */
 }
 
+.pokemon-info-value:hover {
+  cursor:   default;
+}
+
 .pokemon-index {
   display: flex;
 }
 
 .move-info {
-  width: 4.5rem;
+  width: 5.5rem;
   height: 2rem;
   margin-left: 3rem;
   margin-top: 2rem;

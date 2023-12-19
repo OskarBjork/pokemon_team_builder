@@ -270,6 +270,16 @@ function updateMoveList() {
     if (currentMove !== undefined) {
       moveDiv.style.backgroundColor = typeColors[currentMove.type.name];
 
+      const textDiv = document.createElement("div");
+
+      const accuracy =
+        currentMove.accuracy !== null ? currentMove.accuracy : "Status";
+
+      const power = currentMove.power !== null ? currentMove.power : "Status";
+
+      textDiv.textContent = `Pow: ${power}, Acc: ${accuracy}`;
+      textDiv.style.marginTop = "0.5rem";
+
       const buttonsDiv = document.createElement("div");
 
       const typeImg = document.createElement("img");
@@ -284,6 +294,8 @@ function updateMoveList() {
 
       buttonsDiv.append(typeImg);
       buttonsDiv.append(removeMoveImg);
+
+      moveDiv.appendChild(textDiv);
       moveDiv.appendChild(buttonsDiv);
     }
 
