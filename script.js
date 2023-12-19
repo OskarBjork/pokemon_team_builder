@@ -22,6 +22,9 @@ import {
   pokemonIsMythical,
 } from "./modules/api.js";
 
+// TODO: Fixa så att move-namnet är alignat rätt
+// TODO: Flytta move-typen till någon annan plats på kortet
+// TODO: Sortera alla moves efter bokstavsordning
 // TODO: Fixa API calls för pokemon som har flera former (Kommer inte kunna)
 // TODO: Hitta på ett sätt att ta hand om pokemon med flera typer i sökresultatet (de förstör layouten)
 // TODO: Lägg till en knapp för att ladda pokemon från local storage
@@ -47,6 +50,7 @@ const saveBtn = document.querySelector(".save-btn");
 const clearSaveBtn = document.querySelector(".clear-btn");
 const clearPartyBtn = document.querySelector(".clear-party-btn");
 const loadingIcon = document.querySelector(".loading-icon");
+const loadPartyBtn = document.querySelector(".load-btn");
 
 // Event Listeners
 
@@ -66,10 +70,17 @@ clearPartyBtn.addEventListener("click", function () {
   partyState.pokemon.clear();
   const pokemonPartyArray = Array.from(pokemonPartyDiv.children);
   pokemonPartyArray.forEach(function (div) {
+    const pokemonName = div.querySelector(".pokemon")?.id;
     div.innerHTML = "";
     div.style.borderStyle = null;
     div.style.borderColor = "";
     div.style.backgroundColor = "";
+    if (pokemonName != null) {
+      const pokemonListDiv = document.querySelector(
+        "#pokemon-list-" + pokemonName
+      );
+      pokemonListDiv.classList.remove("hidden");
+    }
   });
 });
 
@@ -407,19 +418,13 @@ async function partyAddPokemon(pokemonName, local = false) {
   availableDiv.style.backgroundColor = pokemonColor;
   availableDiv.style.borderStyle = "solid";
   availableDiv.style.borderColor = pokemon.borderColor;
-  if (!local) {
-    const pokemonListDiv = document.querySelector(
-      "#pokemon-list-" + pokemonName
-    );
-    pokemonListDiv.classList.add("hidden");
-  }
+  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
+  pokemonListDiv.classList.add("hidden");
 }
 
 const currentGenerations = await loadGenerations(pokemonGenerationSelector);
 
 async function init() {
-  await loadPokemonFromLocalStorage();
-
   await loadGenerationPokemon(
     { name: "generation-i", url: GENERATION_URL + "/1" },
     partyState,
@@ -428,6 +433,7 @@ async function init() {
     applyDivEventListeners
   );
   loadingIcon.classList.add("hidden");
+  loadPartyBtn.addEventListener("click", loadPokemonFromLocalStorage);
 }
 
 init();

@@ -29,12 +29,24 @@ body {
 }
 
 .save-btn-container {
+  /* margin: 1rem; */
+  width: 5rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
+.load-btn-container {
   margin: 1rem;
   width: 5rem;
   height: 2rem;
 }
 
 .save-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.load-btn:hover {
   background-color: #ddd;
   cursor: pointer;
 }
@@ -47,6 +59,16 @@ body {
 .clear-party-btn:hover {
   background-color: #ddd;
   cursor: pointer;
+}
+
+.clear-party-btn-container {
+  margin: 1rem;
+  /* width: 5rem; */
+  /* height: 2rem; */
+}
+
+.clear-btn {
+  margin-left: 1rem;
 }
 
 .edit-pokemon-button:hover {
@@ -348,6 +370,7 @@ body {
 
 .party-btn {
   transition: background-color 0.1 ease;
+  /* margin: 0.5rem; */
 }
 .party-btn:active {
   background-color: #3e8e41;
