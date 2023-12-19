@@ -194,7 +194,7 @@ function openModal(modal, pokemonDataDiv, pokemon) {
   const pokemonCard = pokemonDataDiv.querySelector(".pokemon-card");
   pokemonCard.innerHTML = "";
   const markup = `
-  <div class="pokemon" id ="${pokemon.name}">
+  <div class="pokemon" style="margin-bottom:1rem;" id="${pokemon.name}">
   <img class="pokemon-sprite" src="${pokemon.spriteUrl}" alt="" />
   <div>${capitalizeFirstLetter(pokemon.name)}&nbsp; </div>
   </div>
