@@ -24,7 +24,6 @@ import {
 
 // TODO: Fixa så att move-namnet är alignat rätt
 // TODO: Flytta move-typen till någon annan plats på kortet
-// TODO: Sortera alla moves efter bokstavsordning
 // TODO: Fixa API calls för pokemon som har flera former (Kommer inte kunna)
 // TODO: Hitta på ett sätt att ta hand om pokemon med flera typer i sökresultatet (de förstör layouten)
 // TODO: Lägg till en knapp för att ladda pokemon från local storage

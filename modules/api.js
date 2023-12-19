@@ -89,7 +89,9 @@ export async function loadPokemonMoves(
   createMoveDiv
 ) {
   container.innerHTML = "";
-  const moves = pokemon.availableMoves;
+  const moves = pokemon.availableMoves.sort((a, b) =>
+    a.move.name.localeCompare(b.move.name)
+  );
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
