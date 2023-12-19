@@ -12,6 +12,7 @@
 body {
   background: linear-gradient(to right, #800080, #ffa500);
   font-family: "Ubuntu", sans-serif;
+  overflow-x: hidden;
 }
 
 .search-bar-search-results-container {
@@ -73,7 +74,7 @@ body {
   display: grid;
   flex-direction: column;
   /* overflow: visible; */
-  overflow-y: scroll;
+  overflow-y: visible;
   overflow-x: hidden;
   height: 20rem;
   width: 50rem;

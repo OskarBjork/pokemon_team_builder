@@ -184,6 +184,8 @@ function applyDivEventListeners(div, pokemonName) {
 
 function openModal(modal, pokemonDataDiv, pokemon) {
   partyState.currentSelectedPokemon = pokemon;
+  document.body.style.overflowY = "hidden";
+  modal.style.overflowY = "hidden";
   modal.style.display = "block";
   const pokemonCard = pokemonDataDiv.querySelector(".pokemon-card");
   pokemonCard.innerHTML = "";
@@ -218,7 +220,6 @@ function openModal(modal, pokemonDataDiv, pokemon) {
   </div>
   </div>
   `;
-  console.log(pokemonDataDiv);
   pokemonCard.innerHTML = markup;
   pokemonCard.style.backgroundColor = pokemon.color;
   updateMoveList();
@@ -227,6 +228,7 @@ function openModal(modal, pokemonDataDiv, pokemon) {
 
 function closeModal() {
   modalWindow.style.display = "none";
+  document.body.style.overflowY = "scroll";
 }
 
 function removeMove(moveName) {
@@ -237,7 +239,6 @@ function removeMove(moveName) {
     return;
   }
   const currentMoves = partyState.currentSelectedPokemon.moves;
-  console.log(currentMoves);
   for (let i = 0; i < currentMoves.length; ++i) {
     if (currentMoves[i].name == moveName) {
       currentMoves.splice(i, 1);
@@ -271,7 +272,6 @@ function savePokemonToLocalStorage() {
   localStorage.clear();
   const currentPokemonParty = Array.from(partyState.pokemon.values());
   currentPokemonParty.forEach(function (pokemon) {
-    console.log(pokemon.pokemon.data.name);
     localStorage.setItem(pokemon.id, pokemon.pokemon.data.name);
   });
 }
@@ -290,8 +290,6 @@ async function loadPokemonFromLocalStorage() {
     const pokemonName = localStorage.getItem(key);
     promises.push(partyAddPokemon(pokemonName, true));
   });
-
-  console.log(promises);
 }
 
 function partyRemovePokemon(pokemonName) {
@@ -313,21 +311,12 @@ function partyRemovePokemon(pokemonName) {
       partyState.pokemon.delete(pokemonName);
     }
   }
-
-  // document.getElementById(partyState.pokemon.get(pokemonName).id).remove();
-
-  // const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
-  // pokemonListDiv.classList.remove("hidden");
-
-  // partyState.pokemon.delete(pokemonName);
 }
 
 async function partyAddPokemon(pokemonName, local = false) {
   if (partyState.pokemon.size + 1 > partyState.pokemonLimit) {
     return;
   }
-
-  // NOTE: Ska vi kunna ha fler av samma pokemon i ett lag?
 
   if (partyState.pokemon.has(pokemonName)) {
     return;
@@ -351,7 +340,7 @@ async function partyAddPokemon(pokemonName, local = false) {
   const markup = `
   <div class="pokemon" id ="${pokemonName}">
   <img class="pokemon-sprite" src="${pokemon.spriteUrl}" alt="" />
-  <div>${capitalizeFirstLetter(pokemon.name)}&nbsp; </div>
+  <div>${capitalizeFirstLetter(pokemon.name)}${pokemon.descriptiveText}</div>
   </div>
   <div class="pokemon-btns">
   <img src="https://cdn-icons-png.flaticon.com/512/0/128.png" class="edit-pokemon-button" />
@@ -410,7 +399,7 @@ async function init() {
     createPokemonDiv,
     applyDivEventListeners
   );
-  console.log("done");
   loadingIcon.classList.add("hidden");
 }
+
 init();

@@ -115,7 +115,6 @@ export async function loadGenerationPokemon(
   pokemon.forEach(async function (pokemon) {});
   const pokemonDivs = pokemon.map(async function (pokemon) {
     if (checkIfPokemonIsInParty(pokemon.name, partyState) == true) {
-      console.log(partyState);
       return;
     }
     const pokemonData = await getPokemonData(pokemon.name);
@@ -125,9 +124,6 @@ export async function loadGenerationPokemon(
   });
   let newDivs = await Promise.allSettled(pokemonDivs);
 
-  // newDivs.forEach(function (pokemonDiv) {
-  //   console.log(pokemonDiv);
-  // });
   newDivs = newDivs.filter(function (pokemonPromise) {
     return (
       pokemonPromise.status == "fulfilled" &&
@@ -196,6 +192,11 @@ export class Pokemon {
   get borderColor() {
     return this.color;
   }
+
+  // TODO: Kom på bättre namn
+  get descriptiveText() {
+    return "<br><br>";
+  }
 }
 
 export class LegendaryPokemon extends Pokemon {
@@ -210,6 +211,11 @@ export class LegendaryPokemon extends Pokemon {
   get borderColor() {
     return "#FFD700";
   }
+
+  // TODO: Kom på bättre namn
+  get descriptiveText() {
+    return "<br>(Legendary)"
+  }
 }
 
 export class MythicalPokemon extends Pokemon {
@@ -223,6 +229,11 @@ export class MythicalPokemon extends Pokemon {
 
   get borderColor() {
     return "#FFD700";
+  }
+
+  // TODO: Kom på bättre namn
+  get descriptiveText() {
+    return "<br>(Mythical)"
   }
 }
 
