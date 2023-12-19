@@ -167,7 +167,8 @@ async function searchAndLoadMoves() {
   pokemonMoves.forEach(async function (move) {
     if (move.move.name.includes(searchString)) {
       const moveData = await getMoveData(move);
-      let moveDiv = createMoveDiv(moveData);
+      const moveDiv = createMoveDiv(moveData);
+      moveDiv.style.backgroundColor = typeColors[moveData.type.name];
       addMoveEventListeners(moveDiv, moveData);
       editList.appendChild(moveDiv);
     }
@@ -258,49 +259,31 @@ function removeMove(moveName) {
 function updateMoveList() {
   currentPokemonMoves.innerHTML = "";
   for (let i = 0; i < 4; ++i) {
-    let currentMove = partyState.currentSelectedPokemon.moves[i];
-    let moveName =
-      currentMove === undefined ? "Empty move slot" : currentMove.name;
-    /*
-    if (currentMove === undefined) {
-      moveName = "Empty move slot";
-    } else {
-      moveName = currentMove.name;
-    }
-    */
-    /*const markup = `
-    <p class="pokemon-move">${capitalizeFirstLetter(moveName)}</p>`;
-    */
-   /*
-    const markup = `
-    <div class="pokemon-move">${capitalizeFirstLetter(
-      moveName
-    )}</div>
-    <div class="pokemon-btns">
-    <img src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png" class="remove-pokemon-button" />
-    </div>
-    </div>
-    `;
-    */
-    const div = document.createElement("div");
-    div.className = "pokemon-move";
-    div.textContent = capitalizeFirstLetter(moveName);
+    const currentMove = partyState.currentSelectedPokemon.moves[i];
 
-    const img = document.createElement("img");
-    img.src = "https://cdn-icons-png.flaticon.com/512/1214/1214428.png";
-    img.className = "remove-move-button";
-    img.addEventListener("click", removeMove.bind(null, moveName));
-    div.appendChild(img)
-    /*const p = document.createElement("p");
-    p.className = "pokemon-move";
-    p.textContent = capitalizeFirstLetter(moveName);
-    */
-    /*document
-      .getElementById(`pokemon-move-${moveName}`)
-      .addEventListener("click", removeMove.bind(null, moveName));
-    */
-    //currentPokemonMoves.appendChild(p);
-    currentPokemonMoves.appendChild(div);
+    const moveName =
+      currentMove !== undefined ? currentMove.name : "Empty move slot";
+
+    const moveDiv = document.createElement("div");
+    moveDiv.className = "pokemon-move";
+    moveDiv.textContent = capitalizeFirstLetter(moveName);
+
+    if (currentMove !== undefined) {
+      moveDiv.style.backgroundColor = typeColors[currentMove.type.name];
+
+      const buttonsDiv = document.createElement("div");
+
+      const removeMoveImg = document.createElement("img");
+      removeMoveImg.src =
+        "https://cdn-icons-png.flaticon.com/512/1214/1214428.png";
+      removeMoveImg.className = "remove-move-button";
+      removeMoveImg.addEventListener("click", removeMove.bind(null, moveName));
+
+      buttonsDiv.append(removeMoveImg);
+      moveDiv.appendChild(buttonsDiv);
+    }
+
+    currentPokemonMoves.appendChild(moveDiv);
   }
 }
 

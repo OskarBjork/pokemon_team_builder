@@ -93,6 +93,7 @@ export async function loadPokemonMoves(
   moves.forEach(async function (move) {
     const moveData = await getMoveData(move);
     const moveDiv = createMoveDiv(moveData);
+    moveDiv.style.backgroundColor = typeColors[moveData.type.name];
     wrapper(moveDiv, moveData);
     container.appendChild(moveDiv);
   });
