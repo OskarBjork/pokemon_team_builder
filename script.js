@@ -354,7 +354,6 @@ async function partyAddPokemon(pokemonName, local = false) {
   const pokemonListDiv = document.getElementById(`pokemon-list-${pokemonName}`);
   const isLegendary =
     pokemonListDiv.getAttribute("data-is-legendary") == "true" ? true : false;
-  console.log(pokemonListDiv.getAttribute("data-is-legendary"));
   const isMythical =
     pokemonListDiv.getAttribute("data-is-mythical") == "true" ? true : false;
 
