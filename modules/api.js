@@ -116,12 +116,16 @@ export async function loadGenerationPokemon(
   const pokemon = await getGenerationPokemon(generation);
   pokemon.forEach(async function (pokemon) {});
   const pokemonDivs = pokemon.map(async function (pokemon) {
+    let pokemonIsInParty;
     if (checkIfPokemonIsInParty(pokemon.name, partyState) == true) {
-      return;
+      pokemonIsInParty = true;
     }
     const pokemonData = await getPokemonData(pokemon.name);
     let pokemonDiv = await createPokemonDiv(pokemonData);
     applyDivEventListeners(pokemonDiv, pokemon.name);
+    if (pokemonIsInParty) {
+      pokemonDiv.classList.add("hidden");
+    }
     return pokemonDiv;
   });
   let newDivs = await Promise.allSettled(pokemonDivs);
