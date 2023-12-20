@@ -18,6 +18,7 @@ import {
   checkIfPokemonIsInParty,
   sortPokemonDivs,
   showPokemon,
+  pokemonIsLegendaryOrMythical,
 } from "./modules/api.js";
 
 // DOM ELEMENTS
@@ -357,13 +358,21 @@ async function partyAddPokemon(pokemonName, local = false) {
     return;
   }
 
-  const pokemonListDiv = document.getElementById(`pokemon-list-${pokemonName}`);
-  const isLegendary =
-    pokemonListDiv.getAttribute("data-is-legendary") == "true" ? true : false;
-  const isMythical =
-    pokemonListDiv.getAttribute("data-is-mythical") == "true" ? true : false;
-
+  let isLegendary, isMythical;
   const pokemonData = await getPokemonData(pokemonName);
+
+  const pokemonListDiv = document.getElementById(`pokemon-list-${pokemonName}`);
+  if (pokemonListDiv != null) {
+    isLegendary =
+      pokemonListDiv.getAttribute("data-is-legendary") == "true" ? true : false;
+    isMythical =
+      pokemonListDiv.getAttribute("data-is-mythical") == "true" ? true : false;
+  } else {
+    const response = await pokemonIsLegendaryOrMythical(pokemonData);
+    isLegendary = response.isLegendary;
+    isMythical = response.isMythical;
+  }
+
   let pokemon;
   if (isLegendary) {
     pokemon = new LegendaryPokemon(pokemonData);
@@ -420,7 +429,7 @@ async function partyAddPokemon(pokemonName, local = false) {
   availableDiv.style.backgroundColor = pokemonColor;
   availableDiv.style.borderStyle = "solid";
   availableDiv.style.borderColor = pokemon.borderColor;
-  pokemonListDiv.classList.add("hidden");
+  pokemonListDiv?.classList.add("hidden");
 }
 
 const currentGenerations = await loadGenerations(pokemonGenerationSelector);
