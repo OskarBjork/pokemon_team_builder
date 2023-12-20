@@ -145,7 +145,7 @@ function getMoveTypeIcons(moveData) {
   const markup = `
   <div class="move-info">
   <p style="display:flex; align-items: center">Type: </p>
-  <img src="${typeIcons[moveData.type.name]}" alt="" />
+  <img src="${typeIcons[moveData.type.name]}" alt="" class="move-type-icon"/>
   </div>`;
 
   const doc = new DOMParser().parseFromString(markup, "text/html");
