@@ -18,18 +18,12 @@ import {
   checkIfPokemonIsInParty,
 } from "./modules/api.js";
 
-// TODO: Fixa så att move-namnet är alignat rätt
-// TODO: Flytta move-typen till någon annan plats på kortet
-// TODO: Fixa API calls för pokemon som har flera former (Kommer inte kunna)
-// TODO: Hitta på ett sätt att ta hand om pokemon med flera typer i sökresultatet (de förstör layouten)
-// TODO: Lägg till en knapp för att ladda pokemon från local storage
-
 // DOM ELEMENTS
 
 const pokemonGenerationSelector = document.querySelector(
   ".pokemon-generation-selector"
 );
-const pokemonListDiv = document.querySelector(".pokemon-list-box");
+const pokemonListBoxDiv = document.querySelector(".pokemon-list-box");
 const modalWindow = document.querySelector(".pokemon-edit-modal-window");
 const pokemonSearchBar = document.querySelector(".search-bar");
 const searchInputField = pokemonSearchBar.querySelector("input");
@@ -74,7 +68,7 @@ clearPartyBtn.addEventListener("click", function () {
       const pokemonListDiv = document.querySelector(
         "#pokemon-list-" + pokemonName
       );
-      pokemonListDiv.classList.remove("hidden");
+      if (pokemonListDiv != null) pokemonListDiv.classList.remove("hidden");
     }
   });
 });
@@ -93,7 +87,7 @@ pokemonGenerationSelector.addEventListener("change", async function () {
   await loadGenerationPokemon(
     generation,
     partyState,
-    pokemonListDiv,
+    pokemonListBoxDiv,
     createPokemonDiv,
     applyDivEventListeners
   );
@@ -141,10 +135,10 @@ async function searchAndLoadPokemon() {
   const generationPokemon = await getGenerationPokemon(
     partyState.currentGeneration
   );
-  let pokemonPreviews = pokemonListDiv.querySelectorAll(".pokemon-preview");
+  let pokemonPreviews = pokemonListBoxDiv.querySelectorAll(".pokemon-preview");
 
   pokemonPreviews.forEach(function (pokemonPreview) {
-    pokemonListDiv.removeChild(pokemonPreview);
+    pokemonListBoxDiv.removeChild(pokemonPreview);
   });
   generationPokemon.forEach(async function (pokemon) {
     if (
@@ -154,7 +148,7 @@ async function searchAndLoadPokemon() {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = await createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
-      pokemonListDiv.appendChild(pokemonDiv);
+      pokemonListBoxDiv.appendChild(pokemonDiv);
     }
   });
 }
@@ -428,7 +422,7 @@ async function init() {
   await loadGenerationPokemon(
     { name: "generation-i", url: GENERATION_URL + "/1" },
     partyState,
-    pokemonListDiv,
+    pokemonListBoxDiv,
     createPokemonDiv,
     applyDivEventListeners
   );
