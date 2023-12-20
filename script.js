@@ -16,6 +16,8 @@ import {
   loadPokemonMoves,
   loadGenerationPokemon,
   checkIfPokemonIsInParty,
+  sortPokemonDivs,
+  showPokemon,
 } from "./modules/api.js";
 
 // DOM ELEMENTS
@@ -140,7 +142,7 @@ async function searchAndLoadPokemon() {
   pokemonPreviews.forEach(function (pokemonPreview) {
     pokemonListBoxDiv.removeChild(pokemonPreview);
   });
-  generationPokemon.forEach(async function (pokemon) {
+  const pokemonDivs = generationPokemon.map(async function (pokemon) {
     if (
       pokemon.name.includes(searchString) &&
       checkIfPokemonIsInParty(pokemon.name, partyState) == false
@@ -148,9 +150,14 @@ async function searchAndLoadPokemon() {
       const pokemonData = await getPokemonData(pokemon.name);
       let pokemonDiv = await createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
-      pokemonListBoxDiv.appendChild(pokemonDiv);
+      return pokemonDiv;
     }
   });
+  const finishedDivs = (await Promise.allSettled(pokemonDivs)).map(
+    (promise) => promise.value
+  );
+  const sortedDivs = await sortPokemonDivs(finishedDivs);
+  showPokemon(sortedDivs, pokemonListBoxDiv);
 }
 
 async function searchAndLoadMoves() {

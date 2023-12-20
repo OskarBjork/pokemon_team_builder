@@ -128,24 +128,33 @@ export async function loadGenerationPokemon(
     }
     return pokemonDiv;
   });
-  let newDivs = await Promise.allSettled(pokemonDivs);
 
-  newDivs = newDivs.filter(function (pokemonPromise) {
-    return (
-      pokemonPromise.status == "fulfilled" &&
-      !(pokemonPromise.value == undefined)
-    );
+  let newDivs = (await Promise.allSettled(pokemonDivs)).map(
+    (pokemonPromise) => pokemonPromise.value
+  );
+
+  const sortedDivs = await sortPokemonDivs(newDivs);
+
+  showPokemon(sortedDivs, pokemonListDiv);
+}
+
+export function showPokemon(pokemonDivs, pokemonListDiv) {
+  pokemonDivs.forEach(function (pokemonDiv) {
+    pokemonListDiv.appendChild(pokemonDiv);
+  });
+}
+
+export async function sortPokemonDivs(pokemonDivs) {
+  const newDivs = pokemonDivs.filter(function (pokemon) {
+    return !(pokemon == undefined);
   });
   newDivs.sort(function (a, b) {
-    const aIndex = a.value.querySelector(".pokemon-index-value").textContent;
-    const bIndex = b.value.querySelector(".pokemon-index-value").textContent;
+    const aIndex = a.querySelector(".pokemon-index-value").textContent;
+    const bIndex = b.querySelector(".pokemon-index-value").textContent;
     return aIndex - bIndex;
   });
-  newDivs.forEach(function (pokemonPromise) {
-    if (pokemonPromise.status == "fulfilled") {
-      pokemonListDiv.appendChild(pokemonPromise.value);
-    }
-  });
+
+  return newDivs;
 }
 
 export async function pokemonIsLegendaryOrMythical(pokemonData) {

@@ -13,6 +13,12 @@ body {
   background: linear-gradient(to right, #800080, #ffa500);
   font-family: "Ubuntu", sans-serif;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .search-bar-search-results-container {
@@ -95,6 +101,7 @@ body {
 .generation-pokemon-container {
   margin-top: 3rem;
   display: flex;
+  margin-left: 2rem;
 }
 
 .pokemon-edit-list {
@@ -112,6 +119,7 @@ body {
 .generation-party-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .pokemon-party-container {
