@@ -6,7 +6,6 @@ import {
 } from "./modules/functions.js";
 import {
   GENERATION_URL,
-  POKEMON_URL,
   getPokemonData,
   getGenerationPokemon,
   Pokemon,

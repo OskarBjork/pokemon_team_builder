@@ -6,11 +6,11 @@ export const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon";
 export const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
 export const GENERATION_URL = "https://pokeapi.co/api/v2/generation";
 
+// API FUNCTIONS
+
 export function checkIfPokemonIsInParty(pokemonName, partyState) {
   return partyState.pokemon.has(pokemonName);
 }
-
-// API FUNCTIONS
 
 export async function getGenerations() {
   let generations = [];
