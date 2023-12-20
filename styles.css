@@ -191,6 +191,7 @@ body {
 }
 
 .search-bar {
+  border-radius: 10px;
   margin-top: 0rem;
 }
 
@@ -276,6 +277,7 @@ body {
   display: flex;
   align-items: left;
   width: 100%;
+  border-radius: 10px;
 }
 
 .pokemon-party {
@@ -385,6 +387,7 @@ body {
 }
 
 .party-btn {
+  border-radius: 10px;
   transition: background-color 0.1 ease;
   /* margin: 0.5rem; */
 }
