@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="pokemon-edit-modal-window">
+      <div class="pokemon-data">
+        <div class="pokemon-card"></div>
+        <!-- <div class="pokemon-stats">
+          <p class="pokemon-info">pokemonName</p>
+          <p class="pokemon-info">pokemonHP</p>
+          <p class="pokemon-info">pokemonATK</p>
+          <p class="pokemon-info">pokemonDEF</p>
+          <p class="pokemon-info">pokemonS-ATK</p>
+          <p class="pokemon-info">pokemonS-DEF</p>
+          <p class="pokemon-info">pokemonSPE</p>
+        </div> -->
+        <div class="move-container">
+          <div class="pokemon-moves"></div>
+          <div class="move-search-bar" style="margin: 1rem">
+            <input
+              type="text"
+              placeholder="Search Move"
+              style="margin-left: 2rem"
+            />
+          </div>
+          <div class="pokemon-edit-list"></div>
+        </div>
+      </div>
+      <button class="close-btn">Close</button>
+    </div>
+    <h1 style="margin: 0rem">Pokemon Team Builder</h1>
+    <h2 style="margin-bottom: 0rem">
+      Click a pokemon to add it to your party. Click the wheel under the pokemon
+      to edit its moves.
+    </h2>
+    <div class="generation-party-container">
+      <div style="display: flex; flex-direction: column">
+        <div
+          class="party-btns-container"
+          style="
+            display: flex;
+            flex-direction: column;
+            margin-top: 4rem;
+            height: 12rem;
+          "
+        >
+          <div class="save-btn-container">
+            <button class="save-btn party-btn">Save Party</button>
+          </div>
+          <div class="load-btn-container">
+            <button class="load-btn party-btn">Load Party</button>
+          </div>
+          <div class="clear-save-btn-container">
+            <button
+              class="clear-btn party-btn"
+              style="width: 5rem; align-items: center"
+            >
+              Clear Saved Party
+            </button>
+          </div>
+          <div class="clear-party-btn-container">
+            <button
+              class="clear-party-btn party-btn"
+              style="width: 5rem; align-items: center"
+            >
+              Clear Party
+            </button>
+          </div>
+        </div>
+        <div class="generation-pokemon-container">
+          <select
+            name="pokemon-generation-selector"
+            class="pokemon-generation-selector"
+          ></select>
+        </div>
+      </div>
+
+      <div class="pokemon-party">
+        <div class="pokemon-party-member"></div>
+        <div class="pokemon-party-member"></div>
+        <div class="pokemon-party-member"></div>
+        <div class="pokemon-party-member"></div>
+        <div class="pokemon-party-member"></div>
+        <div class="pokemon-party-member"></div>
+      </div>
+    </div>
+
+    <div class="search-bar-search-results-container">
+      <div class="search-bar-container">
+        <div class="search-bar">
+          <input type="text" placeholder="Search Pokémon" />
+        </div>
+      </div>
+      <div class="party-btns-search-results-container">
+        <div class="pokemon-list-box">
+          <div style="display: flex; align-items: center">
+            <img
+              class="loading-icon"
+              style="width: 15rem; margin-left: 25rem"
+              src="https://superstorefinder.net/support/wp-content/uploads/2018/01/orange_circles.gif"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

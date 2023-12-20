@@ -1,0 +1,472 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #04aa6d;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+body {
+  background: linear-gradient(to right, #800080, #ffa500);
+  font-family: "Ubuntu", sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.search-bar-search-results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
+}
+
+.party-btns-search-results-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.save-btn-container {
+  /* margin: 1rem; */
+  width: 5rem;
+  height: 2rem;
+  margin-left: 1rem;
+}
+
+.load-btn-container {
+  margin: 1rem;
+  width: 5rem;
+  height: 2rem;
+}
+
+.save-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.load-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.clear-party-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.clear-party-btn-container {
+  margin: 1rem;
+  /* width: 5rem; */
+  /* height: 2rem; */
+}
+
+.clear-btn {
+  margin-left: 1rem;
+}
+
+.edit-pokemon-button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.remove-pokemon-button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.remove-move-button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.pokemon-move-preview {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid whitesmoke;
+}
+
+.generation-pokemon-container {
+  margin-top: 3rem;
+  display: flex;
+  margin-left: 2rem;
+}
+
+.pokemon-edit-list {
+  margin-left: 3rem;
+  display: flex;
+  flex-direction: column;
+  /* overflow: visible; */
+  overflow-y: visible;
+  overflow-x: hidden;
+  height: 20rem;
+  width: 55rem;
+  border: black 0.2rem solid;
+}
+
+.generation-party-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pokemon-party-container {
+  display: flex;
+  flex-direction: column;
+  margin: 3rem;
+}
+
+.pokemon-party-member {
+  display: flex;
+  flex-direction: column;
+  margin: 0.8rem;
+  width: 9rem;
+  /* align-items: center; */
+  height: 13rem;
+  border-style: solid;
+  border-color: rgba(74, 76, 79, 0.5);
+  background-color: rgba(74, 76, 79, 0.5);
+
+  border-radius: 10px;
+}
+
+.pokemon-card {
+  /* padding: 0rem; */
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  align-items: center;
+  width: 9rem;
+  /* align-items: center; */
+  height: 30rem;
+  border-style: solid;
+  border-color: rgba(74, 76, 79, 0.5);
+  background-color: rgba(74, 76, 79, 0.5);
+
+  border-radius: 10px;
+}
+
+.pokemon-edit-modal-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: none;
+  /* Add other styles as needed, such as background color and padding */
+  padding: 20px;
+  background: linear-gradient(to right, #6e8898, #9fb1bc);
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  background-color: red;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  width: 5rem;
+  height: 2rem;
+  border-radius: 10px;
+}
+
+.close-btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.search-bar {
+  margin-top: 0rem;
+}
+
+.pokemon-sprite {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* width: 10rem;
+  height: 10rem; */
+}
+
+.pokemon-move {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding: 1rem;
+  width: 11rem;
+  height: 6rem;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: rgba(74, 76, 79, 0.5);
+  background-color: rgba(74, 76, 79, 0.5);
+  align-items: center;
+  /* width: 100%;
+  height: 100%; */
+  /* position: relative; */
+}
+
+.pokemon-moves {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pokemon-data {
+  display: flex;
+}
+
+.move-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-pokemon-button {
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  /* margin-left: 1rem; */
+}
+
+.pokemon-game-box {
+  display: flex;
+  height: 2rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.pokemon-list-box {
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  width: 70rem;
+  outline: #04aa6d;
+  border: 1px solid #04aa6d;
+  height: 25rem;
+  margin-left: 1rem;
+  overflow: auto;
+  margin-top: 1rem;
+  background-color: #cce7ff;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: left;
+  width: 100%;
+}
+
+.pokemon-party {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  /* width: 100%;
+  height: 100%; */
+  /* position: relative; */
+}
+
+/* .pokemon-party-member-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(74, 76, 79, 0.5);
+  border-radius: 50%;
+} */
+
+.pokemon-btns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* width: auto; */
+  margin: 0.5rem;
+  /* margin-left: 0.5rem; */
+  /* margin-right: 0.5rem; */
+}
+
+.pokemon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: 0;
+  /* margin-bottom: 1rem; */
+  /* margin-left: 70px; */
+}
+
+.pokemon-preview {
+  display: flex;
+  /* margin-bottom: 0.5rem;*/
+  outline: whitesmoke;
+  border: 1px solid whitesmoke;
+  /* outline: #04aa6d;
+  border: 1px solid #04aa6d; */
+  background-color: var(--bg-color);
+}
+
+/* .pokemon-preview:hover {
+  background-color: red;
+} */
+.modal-stat-image {
+  width: 2rem;
+  height: 2rem;
+}
+
+.pokemon-info-modal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* margin-left: 1rem; */
+  /* height: 8rem;
+  width: 5rem; */
+}
+
+.pokemon-info {
+  margin-left: 1.5rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  width: 5rem;
+  height: 2rem;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+.pokemon-info-value {
+  display: flex;
+  align-items: center;
+  /* width: 4rem; */
+  /* height: 3; */
+}
+
+.pokemon-info-value:hover {
+  cursor: default;
+}
+
+.pokemon-index {
+  display: flex;
+}
+
+.move-info {
+  width: 5.5rem;
+  height: 2rem;
+  margin-left: 3rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.party-btn {
+  transition: background-color 0.1 ease;
+  /* margin: 0.5rem; */
+}
+.party-btn:active {
+  background-color: #3e8e41;
+}
+
+.move-info-desc {
+  /* margin-left: 2rem; */
+  width: 10rem;
+  /* height: 2rem; */
+  margin-left: 3rem;
+}
+
+.pokemon-info-types {
+  margin-right: 2rem;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  width: 4rem;
+  height: 2rem;
+}
+
+.remove-pokemon-button {
+  padding: 1rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.remove-move-button {
+  padding: 1rem;
+  width: 2rem;
+  height: 2rem;
+  /*position: absolute;*/
+}
+
+.move-type-button {
+  padding: 1rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.trash-can {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.hovered {
+  background-color: #ddd;
+  cursor: pointer;
+  border: black 0.2rem solid;
+}
+.hidden {
+  display: none;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  /* display: none; */
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  overflow: auto;
+}
+
+.pokemon-generation-selector {
+  cursor: pointer;
+  height: 2rem;
+}
+
+/* Links inside the dropdown */
+
+/* Change color of dropdown links on hover */
+/* .dropdown-content a:hover {
+  background-color: #ddd;
+} */
+
+/* Show the dropdown menu on hover */
+/* .dropdown:hover .dropdown-content {
+  display: block;
+} */
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+/* .dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+} */
