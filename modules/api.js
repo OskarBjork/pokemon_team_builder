@@ -120,7 +120,7 @@ export async function loadGenerationPokemon(
       return;
     }
     const pokemonData = await getPokemonData(pokemon.name);
-    let pokemonDiv = createPokemonDiv(pokemonData);
+    let pokemonDiv = await createPokemonDiv(pokemonData);
     applyDivEventListeners(pokemonDiv, pokemon.name);
     return pokemonDiv;
   });
@@ -144,18 +144,11 @@ export async function loadGenerationPokemon(
   });
 }
 
-export async function pokemonIsLegendary(pokemonData) {
+export async function pokemonIsLegendaryOrMythical(pokemonData) {
   const species = await fetch(pokemonData.species.url).then((response) =>
     response.json()
   );
-  return species.is_legendary;
-}
-
-export async function pokemonIsMythical(pokemonData) {
-  const species = await fetch(pokemonData.species.url).then((response) =>
-    response.json()
-  );
-  return species.is_mythical;
+  return { isLegendary: species.is_legendary, isMythical: species.is_mythical };
 }
 
 export class Pokemon {

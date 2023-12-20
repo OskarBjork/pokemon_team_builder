@@ -7,7 +7,6 @@ import {
 import {
   GENERATION_URL,
   POKEMON_URL,
-  getGenerations,
   getPokemonData,
   getGenerationPokemon,
   Pokemon,
@@ -18,8 +17,6 @@ import {
   loadPokemonMoves,
   loadGenerationPokemon,
   checkIfPokemonIsInParty,
-  pokemonIsLegendary,
-  pokemonIsMythical,
 } from "./modules/api.js";
 
 // TODO: Fixa så att move-namnet är alignat rätt
@@ -156,7 +153,7 @@ async function searchAndLoadPokemon() {
       checkIfPokemonIsInParty(pokemon.name, partyState) == false
     ) {
       const pokemonData = await getPokemonData(pokemon.name);
-      let pokemonDiv = createPokemonDiv(pokemonData);
+      let pokemonDiv = await createPokemonDiv(pokemonData);
       applyDivEventListeners(pokemonDiv, pokemon.name);
       pokemonListDiv.appendChild(pokemonDiv);
     }
@@ -360,16 +357,21 @@ async function partyAddPokemon(pokemonName, local = false) {
     return;
   }
 
-  const pokemonData = await getPokemonData(pokemonName);
+  const pokemonListDiv = document.getElementById(`pokemon-list-${pokemonName}`);
+  const isLegendary = pokemonListDiv.getAttribute("data-is-legendary") == "true" ? true : false;
+  console.log(pokemonListDiv.getAttribute("data-is-legendary"))
+  const isMythical = pokemonListDiv.getAttribute("data-is-mythical") == "true" ? true : false;
 
+  const pokemonData = await getPokemonData(pokemonName);
   let pokemon;
-  if (await pokemonIsLegendary(pokemonData)) {
+  if (isLegendary) {
     pokemon = new LegendaryPokemon(pokemonData);
-  } else if (await pokemonIsMythical(pokemonData)) {
+  } else if (isMythical) {
     pokemon = new MythicalPokemon(pokemonData);
   } else {
     pokemon = new Pokemon(pokemonData);
   }
+
   partyState.pokemon.set(pokemonName, {
     pokemon: pokemon,
     id: "party-member-" + (partyState.pokemon.size + 1),
@@ -417,7 +419,6 @@ async function partyAddPokemon(pokemonName, local = false) {
   availableDiv.style.backgroundColor = pokemonColor;
   availableDiv.style.borderStyle = "solid";
   availableDiv.style.borderColor = pokemon.borderColor;
-  const pokemonListDiv = document.querySelector("#pokemon-list-" + pokemonName);
   pokemonListDiv.classList.add("hidden");
 }
 

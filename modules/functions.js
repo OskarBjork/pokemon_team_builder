@@ -1,5 +1,7 @@
 import { typeColors, typeIcons } from "./config.js";
 
+import { pokemonIsLegendaryOrMythical } from "./api.js";
+
 export function createMoveDiv(moveData) {
   const accuracy = moveData.accuracy !== null ? moveData.accuracy : "Status";
   const power = moveData.power !== null ? moveData.power : "Status";
@@ -37,17 +39,24 @@ export function getMoveDesc(moveData) {
   return moveData.effect_entries[0].effect;
 }
 
-export function createPokemonDiv(pokemonData) {
+export async function createPokemonDiv(pokemonData) {
   let pokemonTypes = "";
   pokemonData.types.forEach(function (type) {
     pokemonTypes += " ";
     pokemonTypes += capitalizeFirstLetter(type.type.name);
   });
   const pokemonColor = typeColors[pokemonData.types[0].type.name];
+
+  const pokemonRarity = await pokemonIsLegendaryOrMythical(pokemonData);
+
+  const isLegendary = pokemonRarity.isLegendary;
+  const isMythical = pokemonRarity.isMythical;
+
   const markup = `<div id="pokemon-list-${
     // TODO: Vi hade kunnat loopa igenom alla base stats och skapa markup för dem enklare
     pokemonData.name
-  }" class="pokemon-preview" style="--bg-color: ${pokemonColor}">
+  }" class="pokemon-preview" style="--bg-color: ${pokemonColor}"
+  data-is-legendary="${isLegendary}" data-is-mythical="${isMythical}">
   <img
     src="${pokemonData.sprites.front_default}"
     alt=""
